@@ -6,13 +6,13 @@
   "scripts": {
     "start": "nodemon login.js",
     "redis": "redis-server",
-    "startSonar": "StartSonar.bat",
-    "sonarTest": "sonar-scanner.bat",
-    "mochaTest": "mocha --exit",
-    "dev": "npm-run-all -p redis start",
-    "devTest": "npm-run-all -p redis mochaTest",
-    "codeTest": "npm-run-all -s startSonar sonarTest",
-    "coverage-test": "nyc --reporter=lcov --reporter=text npm run devTest"
+    "start-sonar": "StartSonar.bat",
+    "sonar-scan": "sonar-scanner.bat",
+    "mocha": "mocha --exit",
+    "dev-start": "npm-run-all -p redis start",
+    "unit-test": "npm-run-all -p redis mocha",
+    "coverage-test": "nyc --reporter=lcov --reporter=text npm run unit-test",
+    "code-test": "npm-run-all -s start-sonar sonar-scan"
   },
   "author": "Kenneth Karamihan",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi": "^17.2.1",
     "jsonwebtoken": "^8.5.1",
