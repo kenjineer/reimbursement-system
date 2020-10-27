@@ -9,10 +9,11 @@
     "startSonar": "StartSonar.bat",
     "sonarTest": "sonar-scanner.bat",
     "mochaTest": "mocha --exit",
-    "dev": "npm-run-all -p redis start",
-    "devTest": "npm-run-all -p redis mochaTest",
-    "codeTest": "npm-run-all -s startSonar sonarTest",
-    "coverage-test": "nyc --reporter=lcov --reporter=text npm run devTest"
+
+    "dev-start": "npm-run-all -p redis start",
+    "unit-test": "npm-run-all -p redis mochaTest",
+    "coverage-test": "nyc --reporter=lcov --reporter=text npm run unit-test",
+    "code-test": "npm-run-all -s startSonar sonarTest"
   },
   "author": "Kenneth Karamihan",
   "license": "ISC",

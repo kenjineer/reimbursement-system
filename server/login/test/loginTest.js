@@ -32,9 +32,11 @@ describe('Login API', () => {
 				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
+					const loginMsg = 'Logged in successfully.';
+
 					res.should.have.status(201);
-					res.body.user.should.not.be.eql(false);
-					res.body.user._userId.should.be.eql(user.username);
+					res.body.success.should.be.eql(1);
+					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
 					res.body.jwt.expires.should.be.eql('8hr');
 					done();
@@ -50,9 +52,11 @@ describe('Login API', () => {
 				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
+					const loginMsg = 'Logged in successfully.';
+
 					res.should.have.status(201);
-					res.body.user.should.not.be.eql(false);
-					res.body.user.email.should.be.eql(user.username);
+					res.body.success.should.be.eql(1);
+					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
 					res.body.jwt.expires.should.be.eql('8hr');
 					done();
@@ -68,9 +72,11 @@ describe('Login API', () => {
 				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
+					const loginMsg = 'Logged in successfully.';
+
 					res.should.have.status(201);
-					res.body.user.should.not.be.eql(false);
-					res.body.user.username.should.be.eql(user.username);
+					res.body.success.should.be.eql(1);
+					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
 					res.body.jwt.expires.should.be.eql('8hr');
 					done();
@@ -87,12 +93,15 @@ describe('Login API', () => {
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
-						message: 'No user with that id/username/email.',
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'No user with that id/username/email.',
+						},
 					};
 
 					res.should.have.status(401);
-					res.body.user.should.be.eql(false);
-					res.body.jwt.should.be.eql(checkObj);
+					res.body.should.be.eql(checkObj);
 					done();
 				});
 		});
@@ -107,12 +116,15 @@ describe('Login API', () => {
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
-						message: 'No user with that id/username/email.',
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'No user with that id/username/email.',
+						},
 					};
 
 					res.should.have.status(401);
-					res.body.user.should.be.eql(false);
-					res.body.jwt.should.be.eql(checkObj);
+					res.body.should.be.eql(checkObj);
 					done();
 				});
 		});
@@ -127,12 +139,15 @@ describe('Login API', () => {
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
-						message: 'No user with that id/username/email.',
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'No user with that id/username/email.',
+						},
 					};
 
 					res.should.have.status(401);
-					res.body.user.should.be.eql(false);
-					res.body.jwt.should.be.eql(checkObj);
+					res.body.should.be.eql(checkObj);
 					done();
 				});
 		});
@@ -147,12 +162,84 @@ describe('Login API', () => {
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
-						message: 'No user with that id/username/email.',
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'No user with that id/username/email.',
+						},
 					};
 
 					res.should.have.status(401);
-					res.body.user.should.be.eql(false);
-					res.body.jwt.should.be.eql(checkObj);
+					res.body.should.be.eql(checkObj);
+					done();
+				});
+		});
+
+		it('It should NOT POST login credentials using id with incorrect password', (done) => {
+			const user = {
+				username: 902191173,
+				password: 'incorrect',
+			};
+			chai.request(loginServer)
+				.post('/api/login')
+				.send(user)
+				.end((err, res) => {
+					const checkObj = {
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'Password incorrect.',
+						},
+					};
+
+					res.should.have.status(401);
+					res.body.should.be.eql(checkObj);
+					done();
+				});
+		});
+
+		it('It should NOT POST login credentials using email with incorrect password', (done) => {
+			const user = {
+				username: 'kckaramihan@gmail.com',
+				password: 'incorrect',
+			};
+			chai.request(loginServer)
+				.post('/api/login')
+				.send(user)
+				.end((err, res) => {
+					const checkObj = {
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'Password incorrect.',
+						},
+					};
+
+					res.should.have.status(401);
+					res.body.should.be.eql(checkObj);
+					done();
+				});
+		});
+
+		it('It should NOT POST login credentials using username with incorrect password', (done) => {
+			const user = {
+				username: 'kenken',
+				password: 'incorrect',
+			};
+			chai.request(loginServer)
+				.post('/api/login')
+				.send(user)
+				.end((err, res) => {
+					const checkObj = {
+						success: 0,
+						message: 'Login failed.',
+						jwt: {
+							message: 'Password incorrect.',
+						},
+					};
+
+					res.should.have.status(401);
+					res.body.should.be.eql(checkObj);
 					done();
 				});
 		});

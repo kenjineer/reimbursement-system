@@ -9,15 +9,19 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = (req, res, next) => {
 	login.passport.authenticate('login', (err, user, info) => {
-		const jsonRes = {
-			user: user,
+		let jsonRes = {
+			success: 0,
+			message: 'Login failed.',
 			jwt: info,
 		};
 
 		if (err) {
-			throw err;
+			res.status(500).send(err);
 		}
 		if (user) {
+			jsonRes.success = 1;
+			jsonRes.message = 'Logged in successfully.';
+
 			res.status(201).send(jsonRes);
 		} else {
 			res.status(401).send(jsonRes);
