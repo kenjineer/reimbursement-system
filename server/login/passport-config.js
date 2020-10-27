@@ -1,6 +1,4 @@
 const LocalStrategy = require('passport-local').Strategy;
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
@@ -43,14 +41,6 @@ function initialize(passport, getUserById, getUserByUsername, getUserByEmail) {
 	passport.deserializeUser((_userId, done) => {
 		return done(null, getUserById(_userId));
 	});
-
-	const options = {
-		jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-		secretOrKey: process.env.SESSION_SECRET,
-		algorithms: ['HS256'],
-	};
-
-	passport.use('jwt', new JwtStrategy(options, authenticateUser));
 }
 
 function issueJwt(user) {
