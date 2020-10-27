@@ -6,7 +6,17 @@ const REDIS_PORT = process.env.PORT || 6379;
 
 // Import Redis
 const redis = require('redis');
+const RedisServer = require('redis-server');
+const server = new RedisServer(REDIS_PORT);
 const client = redis.createClient(REDIS_PORT);
+server.open((err) => {
+	if (err === null) {
+		console.log(`Redis server is up on port ${REDIS_PORT}.`);
+	}
+});
+client.on('ready', function (err) {
+	console.log('Redis up! Now connecting the client...');
+});
 
 // Import Express
 const express = require('express');
@@ -49,7 +59,7 @@ loginApp.use(passport.initialize());
 loginApp.use('/api/user', loginRoute);
 
 loginApp.listen(PORT, () => {
-	console.log(`App listening on port ${PORT}`);
+	console.log(`App listening on port ${PORT}.`);
 });
 
 module.exports.loginApp = loginApp;

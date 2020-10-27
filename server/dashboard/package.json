@@ -1,10 +1,10 @@
 {
-  "name": "login",
+  "name": "dashboard",
   "version": "1.0.0",
   "description": "A reimbursement system which has the functionality to accept or reject plans and applications for reimbursement for managers, file plans and applications for reimbursement for employees, and system administration for admins.",
-  "main": "login.js",
+  "main": "dashboard.js",
   "scripts": {
-    "start": "nodemon login.js",
+    "start": "nodemon dashboard.js",
     "redis": "redis-server",
     "start-sonar": "StartSonar.bat",
     "sonar-scan": "sonar-scanner.bat",
@@ -25,19 +25,11 @@
   },
   "homepage": "https://github.com/kenjineer/reimbursement-system#readme",
   "dependencies": {
-    "axios": "^0.21.0",
-    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "joi": "^17.2.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
-    "node-fetch": "^2.6.1",
-    "npm-run-all": "^4.1.5",
-    "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
     "redis": "^3.0.2",
     "redis-server": "^1.2.2"
   },
@@ -45,7 +37,6 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "dotenv": "^8.2.0",
-    "mocha": "^8.2.0",
-    "nyc": "^15.1.0"
+    "mocha": "^8.2.0"
   }
 }

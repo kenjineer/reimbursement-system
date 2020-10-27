@@ -21,6 +21,7 @@ exports.postLogin = (req, res, next) => {
 		if (user) {
 			jsonRes.success = 1;
 			jsonRes.message = 'Logged in successfully.';
+			login.client.end(true);
 
 			res.status(201).send(jsonRes);
 		} else {
