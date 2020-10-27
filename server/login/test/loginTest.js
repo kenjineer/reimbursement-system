@@ -9,7 +9,7 @@ describe('Login API', () => {
 	describe('GET /api/login', () => {
 		it('It should GET login page', (done) => {
 			chai.request(loginServer)
-				.get('/api/login')
+				.get('/api/user/login')
 				.end((err, res) => {
 					const checkObj = {
 						message: 'Login page loaded.',
@@ -29,7 +29,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -49,7 +49,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -69,7 +69,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -89,7 +89,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -112,7 +112,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -135,7 +135,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -158,7 +158,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -181,7 +181,7 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -204,7 +204,7 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -227,7 +227,7 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/user/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {

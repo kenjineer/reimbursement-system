@@ -15,6 +15,7 @@ const loginApp = express();
 // Import Dependencies
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const cors = require('cors');
 
 // Import Directories
 const loginRoute = require('./routes/login.route');
@@ -35,12 +36,17 @@ initializePassport(
 	}
 );
 
+let corsOptions = {
+	origin: process.env.WEB_URL,
+};
+
+loginApp.use(cors(corsOptions));
 loginApp.disable('x-powered-by');
 loginApp.use(bodyParser.urlencoded({ extended: false }));
 loginApp.use(express.json());
 loginApp.use(passport.initialize());
 
-loginApp.use('/api', loginRoute);
+loginApp.use('/api/user', loginRoute);
 
 loginApp.listen(PORT, () => {
 	console.log(`App listening on port ${PORT}`);
