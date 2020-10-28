@@ -23,12 +23,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginProcess() {
+  doLogin() {
     if (this.formGroup.valid) {
       this.loginService.login(this.formGroup.value).subscribe(
-        (result) => {
-          console.log(result);
-          alert(result.message);
+        (res) => {
+          this.loginService.setLocalStorage(res);
+          console.log(res);
+          alert(res.message);
         },
         (err) => {
           console.log(err);

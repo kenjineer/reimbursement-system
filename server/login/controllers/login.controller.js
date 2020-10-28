@@ -1,11 +1,5 @@
 const login = require('../login');
-
-exports.getLogin = (req, res) => {
-	const msgObj = {
-		message: 'Login page loaded.',
-	};
-	res.status(200).send(msgObj);
-};
+const db = require('../db/db.config');
 
 exports.postLogin = (req, res, next) => {
 	login.passport.authenticate('login', (err, user, info) => {
@@ -22,7 +16,7 @@ exports.postLogin = (req, res, next) => {
 			jsonRes.success = 1;
 			jsonRes.message = 'Logged in successfully.';
 			login.client.end(true);
-
+			db.end();
 			res.status(201).send(jsonRes);
 		} else {
 			res.status(401).send(jsonRes);

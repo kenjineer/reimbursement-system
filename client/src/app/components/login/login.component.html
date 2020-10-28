@@ -2,7 +2,7 @@
     <mat-card fxFlex="25">
         <mat-toolbar color="primary">Login Page</mat-toolbar>
         <form fxLayoutAlign="stretch" fxLayout="column" class="login-form" [formGroup]="formGroup"
-            (ngSubmit)="loginProcess()">
+            (ngSubmit)="doLogin()">
             <mat-form-field>
                 <input matInput placeholder="ID/Email/Username" formControlName="username">
             </mat-form-field>

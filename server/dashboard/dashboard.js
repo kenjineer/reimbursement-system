@@ -2,18 +2,14 @@ require('dotenv').config();
 
 // Declare ports
 const PORT = process.env.PORT || 3001;
-const REDIS_PORT = process.env.PORT || 6380;
+const REDIS_PORT = process.env.PORT || 6379;
 
 // Import Redis
 const redis = require('redis');
 const client = redis.createClient(REDIS_PORT);
-server.open((err) => {
-	if (err === null) {
-		console.log(`Redis server is up on port ${REDIS_PORT}.`);
-	}
-});
-client.on('ready', function (err) {
-	console.log('Redis up! Now connecting the client...');
+
+client.on('ready', (err) => {
+	console.log('Redis up! Now connecting to the client...');
 });
 
 // Import Express
@@ -25,7 +21,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // Import Directories
-// const loginRoute = require('./routes/login.route');
+const dashboardRoute = require('./routes/dashboard.route');
 // const User = require('./models/user.model');
 
 let corsOptions = {
@@ -37,7 +33,7 @@ dashboardApp.disable('x-powered-by');
 dashboardApp.use(bodyParser.urlencoded({ extended: false }));
 dashboardApp.use(express.json());
 
-dashboardApp.use('/api/user', loginRoute);
+dashboardApp.use('/api/user', dashboardRoute);
 
 dashboardApp.listen(PORT, () => {
 	console.log(`App listening on port ${PORT}`);
