@@ -1,0 +1,99 @@
+import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
+import User from 'src/app/models/user.model';
+import {
+  CategoryRank,
+  PendingReimbursements,
+  RecentReimbursements,
+} from 'src/app/models/dashboard.model';
+import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login/login.service';
+import { Observable } from 'rxjs';
+import { PendingTableComponent } from '../dashboard-items/pending-table/pending-table.component';
+import { RecentTableComponent } from '../dashboard-items/recent-table/recent-table.component';
+import { CategoryChartComponent } from '../dashboard-items/category-chart/category-chart.component';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
+})
+export class DashboardComponent implements OnInit {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private dashboardService: DashboardService,
+    private router: Router,
+    private loginService: LoginService
+  ) {}
+
+  ngOnInit() {
+    this.getInfo();
+  }
+
+  isLoaded: boolean;
+  user: User;
+  categoryRank: CategoryRank[] = [];
+  pendingReimbursements: PendingReimbursements[] = [];
+  recentReimbursements: RecentReimbursements[] = [];
+  totalReimbursements: number = 0;
+  totalRejected: number = 0;
+  cards: Observable<{ title: string; cols: number; rows: number }[]>;
+
+  setCards() {
+    /** Based on the screen size, switch from standard to one column per row */
+    this.cards = this.breakpointObserver
+      .observe([Breakpoints.Medium, Breakpoints.Small, Breakpoints.Handset])
+      .pipe(
+        map(({ matches }) => {
+          if (matches) {
+            return [
+              { title: 'Profile', cols: 2, rows: 1 },
+              { title: 'Frequent Reimbursements', cols: 2, rows: 1 },
+              { title: 'Recent', cols: 2, rows: 1 },
+              { title: 'Pendings', cols: 2, rows: 1 },
+            ];
+          }
+
+          return [
+            { title: 'Profile', cols: 1, rows: 1 },
+            { title: 'Frequent Reimbursements', cols: 1, rows: 1 },
+            { title: 'Recent', cols: 1, rows: 1 },
+            { title: 'Pendings', cols: 1, rows: 1 },
+          ];
+        })
+      );
+  }
+
+  getInfo() {
+    this.dashboardService.getUserDashboard().subscribe(
+      (res) => {
+        this.user = res.user;
+        this.categoryRank = res.categoryRank;
+        this.pendingReimbursements = res.pendings;
+        this.recentReimbursements = res.recent;
+        this.totalRejected = res.rejectedCnt;
+
+        PendingTableComponent.data = this.pendingReimbursements;
+        RecentTableComponent.data = this.recentReimbursements;
+        CategoryChartComponent.categories = [];
+        CategoryChartComponent.categoryOccurences = [];
+
+        for (let item of this.categoryRank) {
+          this.totalReimbursements += item.total;
+          CategoryChartComponent.categories.push(item.categoryName);
+          CategoryChartComponent.categoryOccurences.push(item.total);
+        }
+
+        this.setCards();
+      },
+      (err) => {
+        console.log(err);
+        alert(`${err.error.message}\n${err.error.jwt.message}`);
+        this.loginService.logout();
+        this.router.navigate(['api/login']);
+      }
+    );
+  }
+}

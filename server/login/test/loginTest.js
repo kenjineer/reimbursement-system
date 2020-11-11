@@ -6,22 +6,6 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('Login API', () => {
-	describe('GET /api/login', () => {
-		it('It should GET login page', (done) => {
-			chai.request(loginServer)
-				.get('/api/user/login')
-				.end((err, res) => {
-					const checkObj = {
-						message: 'Login page loaded.',
-					};
-
-					res.should.have.status(200);
-					res.body.should.be.eql(checkObj);
-					done();
-				});
-		});
-	});
-
 	describe('POST /api/login', () => {
 		it('It should POST login credentials using id', (done) => {
 			const user = {
@@ -29,7 +13,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -38,18 +22,19 @@ describe('Login API', () => {
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
-					res.body.jwt.expires.should.be.eql('8hr');
+					res.body.jwt.expiryNum.should.be.eql(8);
+					res.body.jwt.datetimeType.should.be.eql('h');
 					done();
 				});
 		});
 
 		it('It should POST login credentials using email', (done) => {
 			const user = {
-				username: 'kckaramihan@gmail.com',
+				username: 'kenneth.karamihan@awsys-i.com',
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -58,7 +43,8 @@ describe('Login API', () => {
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
-					res.body.jwt.expires.should.be.eql('8hr');
+					res.body.jwt.expiryNum.should.be.eql(8);
+					res.body.jwt.datetimeType.should.be.eql('h');
 					done();
 				});
 		});
@@ -69,7 +55,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -78,7 +64,8 @@ describe('Login API', () => {
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
-					res.body.jwt.expires.should.be.eql('8hr');
+					res.body.jwt.expiryNum.should.be.eql(8);
+					res.body.jwt.datetimeType.should.be.eql('h');
 					done();
 				});
 		});
@@ -89,7 +76,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -112,7 +99,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -135,7 +122,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -158,7 +145,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -181,7 +168,7 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -200,11 +187,11 @@ describe('Login API', () => {
 
 		it('It should NOT POST login credentials using email with incorrect password', (done) => {
 			const user = {
-				username: 'kckaramihan@gmail.com',
+				username: 'kenneth.karamihan@awsys-i.com',
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
@@ -227,7 +214,7 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/user/login')
+				.post('/api/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {

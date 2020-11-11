@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { LoginService } from 'src/app/services/login/login.service';
 export class LoginComponent implements OnInit {
   formGroup: FormGroup;
 
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService, private router: Router) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -23,12 +24,14 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginProcess() {
+  doLogin() {
     if (this.formGroup.valid) {
       this.loginService.login(this.formGroup.value).subscribe(
-        (result) => {
-          console.log(result);
-          alert(result.message);
+        (res) => {
+          this.loginService.setLocalStorage(res);
+          console.log(res);
+          alert(res.message);
+          this.router.navigate(['api/dashboard']);
         },
         (err) => {
           console.log(err);

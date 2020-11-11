@@ -11,11 +11,45 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { HttpClientModule } from '@angular/common/http';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoginService } from './services/login/login.service';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AccessGuard } from './guards/access.guard';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MainNavComponent } from './components/main-nav/main-nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MainComponent } from './components/main/main.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { AccountComponent } from './components/account/account.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { ReimbursementComponent } from './components/reimbursement/reimbursement.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { PendingTableComponent } from './components/dashboard-items/pending-table/pending-table.component';
+import { RecentTableComponent } from './components/dashboard-items/recent-table/recent-table.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { CategoryChartComponent } from './components/dashboard-items/category-chart/category-chart.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    DashboardComponent,
+    MainNavComponent,
+    MainComponent,
+    AccountComponent,
+    ReimbursementComponent,
+    PendingTableComponent,
+    RecentTableComponent,
+    CategoryChartComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,11 +60,31 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
+    MatSidenavModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    LayoutModule,
+    MatIconModule,
+    MatListModule,
+    MatGridListModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    NgApexchartsModule,
   ],
-  providers: [],
+  providers: [
+    LoginService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    AccessGuard,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -16,5 +16,6 @@ export const environment = {
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
 export const baseUrls = {
-  login: 'http://localhost:3000/api/',
+  login: 'http://localhost:3000/api',
+  dashboard: 'http://localhost:3001/api',
 };
