@@ -3,49 +3,57 @@ const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
 
-function initialize(passport, getUserById, getUserByUsername, getUserByEmail) {
+exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) => {
 	const authenticateUser = async (username, password, done) => {
-		const isEmail = joi.string().email().validate(username);
-		const isId = joi.number().positive().integer().max(1231999999).validate(username);
-		let user;
-
-		if (!isEmail.error) {
-			const [result] = await getUserByEmail(username);
-			user = result[0];
-		} else if (!isId.error) {
-			const [result] = await getUserById(username);
-			user = result[0];
-		} else {
-			const [result] = await getUserByUsername(username);
-			user = result[0];
-		}
-
-		if (!user) {
-			return done(null, false, { message: 'No user with that id/username/email.' });
-		}
-
 		try {
+			const isEmail = joi.string().email().validate(username);
+			const isId = joi.number().positive().integer().max(1231999999).validate(username);
+			let user;
+
+			if (!isEmail.error) {
+				const [result] = await getUserByEmail(username);
+				user = result[0];
+			} else if (!isId.error) {
+				const [result] = await getUserById(username);
+				user = result[0];
+			} else {
+				const [result] = await getUserByUsername(username);
+				user = result[0];
+			}
+
+			if (!user) {
+				return done(null, false, { message: 'No user with that id/username/email.' });
+			}
+
 			if (await bcrypt.compare(password, user.password)) {
 				const issuedJwt = await issueJwt(user);
 				return done(null, user, issuedJwt);
 			} else {
 				return done(null, false, { message: 'Password incorrect.' });
 			}
-		} catch (e) {
-			return done(e);
+		} catch (err) {
+			console.log(err);
+			return done(err);
 		}
 	};
 
 	passport.use('login', new LocalStrategy({ session: false }, authenticateUser));
 	passport.serializeUser((user, done) => done(null, user._userId));
 	passport.deserializeUser((_userId, done) => {
-		return done(null, getUserById(_userId));
+		try {
+			return done(null, getUserById(_userId));
+		} catch (err) {
+			console.log(err);
+			return done(err);
+		}
 	});
-}
+};
 
-function issueJwt(user) {
+const issueJwt = (user) => {
 	const _userId = user._userId;
-	const expiresIn = '8hr';
+	const expiryNum = 8;
+	const datetimeType = 'h';
+	const expiresIn = `${expiryNum}${datetimeType}`;
 	const payload = {
 		sub: _userId,
 		iat: Date.now(),
@@ -58,8 +66,7 @@ function issueJwt(user) {
 
 	return {
 		token: `Bearer ${signedToken}`,
-		expires: expiresIn,
+		expiryNum: expiryNum,
+		datetimeType: datetimeType,
 	};
-}
-
-module.exports = initialize;
+};

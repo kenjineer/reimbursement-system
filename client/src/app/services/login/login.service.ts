@@ -11,14 +11,13 @@ export class LoginService {
   constructor(private http: HttpClient) {}
 
   setLocalStorage(res) {
-    const expires = moment().add(res.jwt.expiresIn);
-
+    const expires = moment().add(res.jwt.expiryNum, res.jwt.datetimeType);
     localStorage.setItem('token', res.jwt.token);
     localStorage.setItem('expires', JSON.stringify(expires.valueOf()));
   }
 
   login(data): Observable<any> {
-    return this.http.post(`${baseUrls.login}user/login`, data);
+    return this.http.post(`${baseUrls.login}/login`, data);
   }
 
   logout() {

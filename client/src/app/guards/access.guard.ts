@@ -1,23 +1,34 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoginService } from '../services/login/login.service';
 
 @Injectable()
 export class AccessGuard implements CanActivate {
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
   canActivate(
     route: ActivatedRouteSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    const requiresLogin = route.data.requiresLogin || false;
+    const requiredLogin = route.data.requiredLogin || false;
+    const requiredLogout = route.data.requiredLogout || false;
     const isLoggedIn = this.loginService.isLoggedIn();
+    const isLoggedOut = this.loginService.isLoggedOut();
 
-    if ((requiresLogin && isLoggedIn) || !(requiresLogin && isLoggedIn)) {
+    if ((requiredLogin && isLoggedIn) || (requiredLogout && isLoggedOut)) {
       return true;
-    } else if (requiresLogin && !isLoggedIn) {
-      return false;
-    } else if (!requiresLogin && isLoggedIn) {
-      this.router.navigate(['user/dashboard']);
+    } else if (requiredLogin && !isLoggedIn) {
+      this.router.navigate(['api/login']);
+    } else {
+      this.router.navigate(['api/dashboard']);
       return false;
     }
   }

@@ -1,0 +1,11 @@
+<app-main-nav>
+    <div *ngIf="isDashboardRoute()">
+        <app-dashboard></app-dashboard>
+    </div>
+    <div *ngIf="isReimbursementRoute()">
+        <app-reimbursement></app-reimbursement>
+    </div>
+    <div *ngIf="isAccountRoute()">
+        <app-account></app-account>
+    </div>
+</app-main-nav>

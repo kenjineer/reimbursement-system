@@ -1,16 +1,37 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './components/login/login.component';
+import { MainComponent } from './components/main/main.component';
 import { AccessGuard } from './guards/access.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'user/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'api/login', pathMatch: 'full' },
   {
-    path: 'user/login',
+    path: 'api/login',
     component: LoginComponent,
-    data: { requiresLogin: false },
+    data: { requiredLogout: true },
     canActivate: [AccessGuard],
   },
+  {
+    path: 'api/dashboard',
+    component: MainComponent,
+    data: { requiredLogin: true },
+    canActivate: [AccessGuard],
+  },
+  {
+    path: 'api/reimbursement',
+    component: MainComponent,
+    data: { requiredLogin: true },
+    canActivate: [AccessGuard],
+  },
+  {
+    path: 'api/account',
+    component: MainComponent,
+    data: { requiredLogin: true },
+    canActivate: [AccessGuard],
+  },
+  { path: '**', redirectTo: 'api/login', pathMatch: 'full' },
 ];
 
 @NgModule({

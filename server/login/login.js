@@ -2,15 +2,6 @@ require('dotenv').config();
 
 // Declare ports
 const PORT = process.env.PORT || 3000;
-const REDIS_PORT = process.env.PORT || 6379;
-
-// Import Redis
-const redis = require('redis');
-const client = redis.createClient(REDIS_PORT);
-
-client.on('ready', (err) => {
-	console.log('Redis up! Now connecting to the client...');
-});
 
 // Import Express
 const express = require('express');
@@ -24,7 +15,7 @@ const cors = require('cors');
 // Import Directories
 const loginRoute = require('./routes/login.route');
 const User = require('./models/user.model');
-const initializePassport = require('./passport-config');
+const initializePassport = require('./passport-config').initialize;
 
 // Initialize Passport Config
 initializePassport(
@@ -40,7 +31,7 @@ initializePassport(
 	}
 );
 
-let corsOptions = {
+const corsOptions = {
 	origin: process.env.WEB_URL,
 };
 
@@ -50,7 +41,7 @@ loginApp.use(bodyParser.urlencoded({ extended: false }));
 loginApp.use(express.json());
 loginApp.use(passport.initialize());
 
-loginApp.use('/api/user', loginRoute);
+loginApp.use('/api', loginRoute);
 
 loginApp.listen(PORT, () => {
 	console.log(`App listening on port ${PORT}.`);
@@ -58,4 +49,3 @@ loginApp.listen(PORT, () => {
 
 module.exports.loginApp = loginApp;
 module.exports.passport = passport;
-module.exports.client = client;
