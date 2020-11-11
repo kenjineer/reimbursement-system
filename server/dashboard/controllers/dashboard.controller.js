@@ -6,16 +6,22 @@ exports.getUserDashboard = async (req, res) => {
 	const user = getAuthUser();
 
 	try {
-		const [manager] = await User.getManagerByDev(user._devId);
+		const [manager] = await User.readManagerByDev(user._devId);
 
 		if (manager[0]) {
-			const [categoryRank] = await Reimbursements.getCategoryRank(
+			const [categoryRank] = await Reimbursements.readReimbursementByCategory(
 				user._userId,
 				manager[0]._userId
 			);
-			const [pendings] = await Reimbursements.getPendings(user._userId, manager[0]._userId);
-			const [recent] = await Reimbursements.getRecent(user._userId, manager[0]._userId);
-			const [rejectedCnt] = await Reimbursements.getRejected(
+			const [pendings] = await Reimbursements.readReimbursementPending(
+				user._userId,
+				manager[0]._userId
+			);
+			const [recent] = await Reimbursements.readReimbursementRecent(
+				user._userId,
+				manager[0]._userId
+			);
+			const [rejectedCnt] = await Reimbursements.readReimbursementRejected(
 				user._userId,
 				manager[0]._userId
 			);

@@ -1,4 +1,4 @@
-const login = require('../login');
+const login = require('../app');
 
 module.exports.postLogin = function (req, res, next) {
 	login.passport.authenticate('login', (err, user, info) => {

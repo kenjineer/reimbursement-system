@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
 
-exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) => {
+exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmail) => {
 	const authenticateUser = async (username, password, done) => {
 		try {
 			const isEmail = joi.string().email().validate(username);
@@ -11,13 +11,13 @@ exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) 
 			let user;
 
 			if (!isEmail.error) {
-				const [result] = await getUserByEmail(username);
+				const [result] = await readUserByUsername(username);
 				user = result[0];
 			} else if (!isId.error) {
-				const [result] = await getUserById(username);
+				const [result] = await readUserById(username);
 				user = result[0];
 			} else {
-				const [result] = await getUserByUsername(username);
+				const [result] = await readUserByEmail(username);
 				user = result[0];
 			}
 
@@ -41,7 +41,7 @@ exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) 
 	passport.serializeUser((user, done) => done(null, user._userId));
 	passport.deserializeUser((_userId, done) => {
 		try {
-			return done(null, getUserById(_userId));
+			return done(null, readUserById(_userId));
 		} catch (err) {
 			console.log(err);
 			return done(err);

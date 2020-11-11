@@ -1,6 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const loginServer = require('../login').loginApp;
+const loginServer = require('../app').loginApp;
 
 chai.should();
 chai.use(chaiHttp);

@@ -6,12 +6,12 @@ const readUserById = path.join(__dirname, '..', 'db', 'sql', 'readUSR.sql');
 const readManagerByDev = path.join(__dirname, '..', 'db', 'sql', 'readUSR-manager.sql');
 
 module.exports = class User {
-	static readUserById(_userId) {
+	static getUserById(_userId) {
 		const user = fs.readFileSync(readUserById).toString();
 		return db.execute(user, [_userId]);
 	}
 
-	static readManagerByDev(_devId) {
+	static getManagerByDev(_devId) {
 		const user = fs.readFileSync(readManagerByDev).toString();
 		return db.execute(user, [_devId]);
 	}

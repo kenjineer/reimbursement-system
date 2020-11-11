@@ -21,13 +21,13 @@ const initializePassport = require('./passport-config').initialize;
 initializePassport(
 	passport,
 	(_userId) => {
-		return User.getUserById(_userId);
+		return User.readUserByEmail(_userId);
 	},
 	(username) => {
-		return User.getUserByUsername(username);
+		return User.readUserByUsername(username);
 	},
 	(email) => {
-		return User.getUserByEmail(email);
+		return User.readUserByEmail(email);
 	}
 );
 
