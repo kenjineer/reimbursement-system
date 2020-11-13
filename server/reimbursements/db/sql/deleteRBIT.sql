@@ -1,4 +1,6 @@
 DELETE FROM
 	reimbursementitems
 WHERE
-	_reimbursementId in (?);
+	_itemId = ?
+	AND
+	_reimbursementId = ?;

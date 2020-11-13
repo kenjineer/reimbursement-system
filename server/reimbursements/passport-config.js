@@ -7,7 +7,7 @@ exports.getAuthUser = () => {
 	return user[0];
 };
 
-exports.initialize = (passport, getUserById) => {
+exports.initialize = (passport, readUserById) => {
 	const options = {
 		jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 		secretOrKey: process.env.SESSION_SECRET,
@@ -18,7 +18,7 @@ exports.initialize = (passport, getUserById) => {
 		'jwt',
 		new JwtStrategy(options, async (jwtPayload, done) => {
 			try {
-				const [result] = await getUserById(jwtPayload.sub);
+				const [result] = await readUserById(jwtPayload.sub);
 				user.push(result[0]);
 				return done(null, user[0]);
 			} catch (err) {

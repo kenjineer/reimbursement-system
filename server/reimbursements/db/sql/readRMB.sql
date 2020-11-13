@@ -12,6 +12,7 @@ SELECT
     RMB.submittedDate,
     RMB.approvalDate,
     RMB.rejectionDate,
+    RMB.remarks
     RMB.createdDate,
     RMB.updatedDate
 FROM
@@ -24,5 +25,3 @@ FROM
     ON RMB._categoryId = CTG._categoryId
 WHERE
 	RMB._userId = ?
-    AND
-    RMB._managerId = ?

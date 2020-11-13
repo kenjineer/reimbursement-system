@@ -19,7 +19,7 @@ const initializePassport = require('./passport-config').initialize;
 
 // Initialize Passport Config
 initializePassport(passport, (_userId) => {
-	return User.getUserById(_userId);
+	return User.readUserById(_userId);
 });
 
 const corsOptions = {

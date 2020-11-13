@@ -11,8 +11,9 @@ INSERT INTO
         submittedDate,
         approvalDate,
         rejectionDate,
+        remarks,
         createdDate,
         updatedDate
     )
 VALUES
-(?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NOW(), NOW());
+(?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, NOW(), NOW());

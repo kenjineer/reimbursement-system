@@ -10,4 +10,4 @@ SELECT
 FROM
 	reimbursementitems
 WHERE
-	_reimbursementId in (?);
+	_reimbursementId = ?;

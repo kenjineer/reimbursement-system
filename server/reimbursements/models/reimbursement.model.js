@@ -8,7 +8,15 @@ const updateReimbursement = path.join(__dirname, '..', 'db', 'sql', 'updateRMB.s
 const deleteReimbursements = path.join(__dirname, '..', 'db', 'sql', 'deleteRMB.sql');
 
 module.exports = class Reimbursement {
-	static createReimbursement(_userId, _managerId, _categoryId, purpose, totalCost, plannedDate) {
+	static createReimbursement(
+		_userId,
+		_managerId,
+		_categoryId,
+		purpose,
+		totalCost,
+		plannedDate,
+		remarks
+	) {
 		const reimbursement = fs.readFileSync(createReimbursement).toString();
 		return db.execute(reimbursement, [
 			_userId,
@@ -17,20 +25,22 @@ module.exports = class Reimbursement {
 			purpose,
 			totalCost,
 			plannedDate,
+			remarks,
 		]);
 	}
 
-	static readReimbursements(_userId, _managerId) {
+	static readReimbursements(_userId) {
 		const reimbursement = fs.readFileSync(readReimbursements).toString();
-		return db.execute(reimbursement, [_userId, _managerId]);
+		return db.execute(reimbursement, [_userId]);
 	}
 
-	static updateReimbursements(
+	static updateReimbursement(
 		_categoryId,
 		purpose,
 		totalCost,
 		plannedDate,
 		submittedDate,
+		remarks,
 		_reimbursementId,
 		_userId
 	) {
@@ -41,6 +51,7 @@ module.exports = class Reimbursement {
 			totalCost,
 			plannedDate,
 			submittedDate,
+			remarks,
 			_reimbursementId,
 			_userId,
 		]);

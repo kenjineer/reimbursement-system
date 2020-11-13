@@ -1,4 +1,4 @@
-const Reimbursements = require('../models/reimbursement.model');
+const Reimbursement = require('../models/reimbursement.model');
 const User = require('../models/user.model');
 const getAuthUser = require('../passport-config').getAuthUser;
 
@@ -9,19 +9,19 @@ exports.getUserDashboard = async (req, res) => {
 		const [manager] = await User.readManagerByDev(user._devId);
 
 		if (manager[0]) {
-			const [categoryRank] = await Reimbursements.readReimbursementByCategory(
+			const [categoryRank] = await Reimbursement.readReimbursementByCategory(
 				user._userId,
 				manager[0]._userId
 			);
-			const [pendings] = await Reimbursements.readReimbursementPending(
+			const [pendings] = await Reimbursement.readReimbursementPending(
 				user._userId,
 				manager[0]._userId
 			);
-			const [recent] = await Reimbursements.readReimbursementRecent(
+			const [recent] = await Reimbursement.readReimbursementRecent(
 				user._userId,
 				manager[0]._userId
 			);
-			const [rejectedCnt] = await Reimbursements.readReimbursementRejected(
+			const [rejectedCnt] = await Reimbursement.readReimbursementRejected(
 				user._userId,
 				manager[0]._userId
 			);
