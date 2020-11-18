@@ -21,7 +21,7 @@ const initializePassport = require('./passport-config').initialize;
 initializePassport(
 	passport,
 	(_userId) => {
-		return User.readUserByEmail(_userId);
+		return User.readUserById(_userId);
 	},
 	(username) => {
 		return User.readUserByUsername(username);
@@ -44,7 +44,7 @@ loginApp.use(passport.initialize());
 loginApp.use('/api', loginRoute);
 
 loginApp.listen(PORT, () => {
-	console.log(`App listening on port ${PORT}.`);
+	console.log(`Login App listening on port ${PORT}.`);
 });
 
 module.exports.loginApp = loginApp;

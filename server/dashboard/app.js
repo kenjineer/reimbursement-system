@@ -35,7 +35,7 @@ dashboardApp.use(passport.initialize());
 dashboardApp.use('/api', passport.authenticate('jwt', { session: false }), dashboardRoute);
 
 dashboardApp.listen(PORT, () => {
-	console.log(`App listening on port ${PORT}`);
+	console.log(`Dashboard App listening on port ${PORT}`);
 });
 
 module.exports = dashboardApp;

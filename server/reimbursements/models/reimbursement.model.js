@@ -4,6 +4,7 @@ const db = require('../db/db.config');
 
 const createReimbursement = path.join(__dirname, '..', 'db', 'sql', 'createRMB.sql');
 const readReimbursements = path.join(__dirname, '..', 'db', 'sql', 'readRMB.sql');
+const readSelectedReimbursements = path.join(__dirname, '..', 'db', 'sql', 'readRMB-selected.sql');
 const updateReimbursement = path.join(__dirname, '..', 'db', 'sql', 'updateRMB.sql');
 const deleteReimbursements = path.join(__dirname, '..', 'db', 'sql', 'deleteRMB.sql');
 
@@ -32,6 +33,11 @@ module.exports = class Reimbursement {
 	static readReimbursements(_userId) {
 		const reimbursement = fs.readFileSync(readReimbursements).toString();
 		return db.execute(reimbursement, [_userId]);
+	}
+
+	static readSelectedReimbursements(_reimbursementId, _userId) {
+		const reimbursement = fs.readFileSync(readSelectedReimbursements).toString();
+		return db.execute(reimbursement, [_reimbursementId, _userId]);
 	}
 
 	static updateReimbursement(

@@ -11,13 +11,13 @@ exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmai
 			let user;
 
 			if (!isEmail.error) {
-				const [result] = await readUserByUsername(username);
+				const [result] = await readUserByEmail(username);
 				user = result[0];
 			} else if (!isId.error) {
 				const [result] = await readUserById(username);
 				user = result[0];
 			} else {
-				const [result] = await readUserByEmail(username);
+				const [result] = await readUserByUsername(username);
 				user = result[0];
 			}
 

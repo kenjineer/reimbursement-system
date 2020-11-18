@@ -35,7 +35,7 @@ reimbursementApp.use(passport.initialize());
 reimbursementApp.use('/api', passport.authenticate('jwt', { session: false }), reimbursementRoute);
 
 reimbursementApp.listen(PORT, () => {
-	console.log(`App listening on port ${PORT}`);
+	console.log(`Reimbursement App listening on port ${PORT}`);
 });
 
 module.exports = reimbursementApp;

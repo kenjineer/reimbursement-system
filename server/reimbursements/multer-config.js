@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 const uploadDir = path.join(__dirname, 'assets', 'uploads');
 
 const imageFilter = (req, file, cb) => {
@@ -10,14 +11,21 @@ const imageFilter = (req, file, cb) => {
 };
 
 const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, uploadDir);
-	},
+	destination: uploadDir,
 	filename: (req, file, cb) => {
 		cb(null, `${Date.now()}_arsys_${file.originalname}`);
 	},
+	limits: {
+		fileSize: 8000000,
+	},
 });
 
-const uploadFile = multer({ storage: storage, fileFilter: imageFilter });
+const uploadFile = multer({
+	storage: storage,
+	fileFilter: imageFilter,
+	limits: {
+		fileSize: 8000000,
+	},
+});
 
 module.exports = uploadFile;

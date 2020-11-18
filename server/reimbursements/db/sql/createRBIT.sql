@@ -10,4 +10,4 @@ INSERT INTO
         updatedDate
     )
 VALUES
-    (?, ?, ?, ?, NULL, NOW(), NOW());
+    (?, ?, ?, ?, 0, NOW(), NOW());

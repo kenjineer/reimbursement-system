@@ -40,11 +40,6 @@ describe('Dashboard API', () => {
 					res.should.have.status(200);
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(reqMsg);
-					res.body.user.should.not.be.eql(undefined);
-					res.body.categoryRank.should.not.be.eql(undefined);
-					res.body.pendings.should.not.be.eql(undefined);
-					res.body.recent.should.not.be.eql(undefined);
-					res.body.rejectedCnt.should.not.be.eql(undefined);
 					done();
 				});
 		});

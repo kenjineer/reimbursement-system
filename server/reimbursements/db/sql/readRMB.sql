@@ -12,7 +12,7 @@ SELECT
     RMB.submittedDate,
     RMB.approvalDate,
     RMB.rejectionDate,
-    RMB.remarks
+    RMB.remarks,
     RMB.createdDate,
     RMB.updatedDate
 FROM
@@ -24,4 +24,4 @@ FROM
     INNER JOIN categories AS CTG
     ON RMB._categoryId = CTG._categoryId
 WHERE
-	RMB._userId = ?
+	RMB._userId = ?;

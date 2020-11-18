@@ -1,13 +1,17 @@
 SELECT
-	_itemId,
-    _reimbursementId,
-    item,
-    qty,
-    cost,
-    approved,
-    createdDate,
-    updatedDate
+	RBIT._itemId,
+    RMB._reimbursementId,
+    RBIT.item,
+    RBIT.qty,
+    RBIT.cost,
+    RBIT.approved,
+    RBIT.createdDate,
+    RBIT.updatedDate
 FROM
-	reimbursementitems
+	reimbursementitems AS RBIT
+    INNER JOIN reimbursements AS RMB
+    ON RBIT._reimbursementId = RMB._reimbursementId
 WHERE
-	_reimbursementId = ?;
+	RMB._reimbursementId = ?
+    AND
+    RMB._userId = ?;

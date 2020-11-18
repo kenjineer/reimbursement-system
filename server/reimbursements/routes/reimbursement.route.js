@@ -6,16 +6,35 @@ const reimbursementController = require('../controllers/reimbursement.controller
 
 router.get('/reimbursement', reimbursementController.getUserReimbursements);
 
-router.get('/reimbursements/:_reimbursementId');
+router.get(
+	'/reimbursement/:_reimbursementId/reimbursement-items',
+	reimbursementController.getReimbursementItems
+);
 
-router.post('/reimbursement/new-reimbursement', upload.array('file'));
+router.get('/reimbursement/:_reimbursementId/receipts', reimbursementController.getReceipts);
 
-router.patch('/reimbursement/:_reimbursementId/edit-reimbursement', upload.array('file'));
+router.post(
+	'/reimbursement/new-reimbursement',
+	upload.array('files'),
+	reimbursementController.postNewReimbursement
+);
 
-router.delete('/reimbursement/delete-reimbursement');
+router.put(
+	'/reimbursement/:_reimbursementId/edit-reimbursement',
+	upload.array('files'),
+	reimbursementController.putReimbursement
+);
 
-router.delete('/reimbursement/:_reimbursementId/delete-item/:_itemId');
+router.delete('/reimbursement/delete-reimbursement', reimbursementController.deleteReimbursements);
 
-router.delete('/reimbursement/:_reimbursementId/delete-receipt/:_receiptId');
+router.delete(
+	'/reimbursement/:_reimbursementId/delete-item/:_itemId',
+	reimbursementController.deleteReimbursementItem
+);
+
+router.delete(
+	'/reimbursement/:_reimbursementId/delete-receipt/:_receiptId',
+	reimbursementController.deleteReceipt
+);
 
 module.exports = router;

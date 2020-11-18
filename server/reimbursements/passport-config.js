@@ -2,6 +2,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const user = [];
+const extractedJwt = [];
 
 exports.getAuthUser = () => {
 	return user[0];
@@ -19,6 +20,7 @@ exports.initialize = (passport, readUserById) => {
 		new JwtStrategy(options, async (jwtPayload, done) => {
 			try {
 				const [result] = await readUserById(jwtPayload.sub);
+				user.pop();
 				user.push(result[0]);
 				return done(null, user[0]);
 			} catch (err) {
