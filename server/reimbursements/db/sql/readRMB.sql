@@ -4,6 +4,7 @@ SELECT
     TRIM(CONCAT_WS(" ", USR.firstname, USR.middlename, USR.lastname, USR.postfix)) AS employeeName,
     RMB._managerId,
     TRIM(CONCAT_WS(" ", MGR.firstname, MGR.middlename, MGR.lastname, MGR.postfix)) AS managerName,
+    CTG._categoryId,
     CTG.categoryName,
     RMB.purpose,
     RMB.totalCost,

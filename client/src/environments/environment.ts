@@ -18,4 +18,5 @@ export const environment = {
 export const baseUrls = {
   login: 'http://localhost:3000/api',
   dashboard: 'http://localhost:3001/api',
+  reimbursements: 'http://localhost:3002/api',
 };

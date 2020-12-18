@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config();
+}
 
 // Declare ports
 const PORT = process.env.PORT || 3002;
@@ -13,7 +15,7 @@ const passport = require('passport');
 const cors = require('cors');
 
 // Import Directories
-const reimbursementRoute = require('./routes/reimbursement.route');
+const reimbursementsRoute = require('./routes/reimbursements.route');
 const User = require('./models/user.model');
 const initializePassport = require('./passport-config').initialize;
 
@@ -32,10 +34,10 @@ reimbursementApp.use(bodyParser.urlencoded({ extended: false }));
 reimbursementApp.use(express.json());
 reimbursementApp.use(passport.initialize());
 
-reimbursementApp.use('/api', passport.authenticate('jwt', { session: false }), reimbursementRoute);
+reimbursementApp.use('/api', passport.authenticate('jwt', { session: false }), reimbursementsRoute);
 
 reimbursementApp.listen(PORT, () => {
-	console.log(`Reimbursement App listening on port ${PORT}`);
+	console.log(`Reimbursements App listening on port ${PORT}`);
 });
 
 module.exports = reimbursementApp;

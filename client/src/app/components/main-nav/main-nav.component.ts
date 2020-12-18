@@ -31,8 +31,8 @@ export class MainNavComponent {
   activeRouteTitle() {
     if (this.router.url === '/api/dashboard') {
       return 'Dashboard';
-    } else if (this.router.url === '/api/reimbursement') {
-      return 'Reimbursement';
+    } else if (this.router.url === '/api/reimbursements') {
+      return 'Reimbursements';
     } else if (this.router.url === '/api/account') {
       return 'Account';
     }

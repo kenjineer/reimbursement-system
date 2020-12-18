@@ -1,13 +1,13 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>ARS PH</mat-toolbar>
+    <mat-toolbar>ARSys PH</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item [routerLink]="['/api/dashboard']" routerLinkActive="list-item-active">
         <mat-icon>dashboard</mat-icon>Dashboard
       </a>
-      <a mat-list-item [routerLink]="['/api/reimbursement']" routerLinkActive="list-item-active">
-        <mat-icon>account_balance</mat-icon>Reimbursement
+      <a mat-list-item [routerLink]="['/api/reimbursements']" routerLinkActive="list-item-active">
+        <mat-icon>account_balance</mat-icon>Reimbursements
       </a>
       <a mat-list-item [routerLink]="['/api/account']" routerLinkActive="list-item-active">
         <mat-icon>account_circle</mat-icon>Account

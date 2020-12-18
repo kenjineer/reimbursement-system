@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const fs = require('fs');
 const path = require('path');
-const reimbursementServer = require('../app');
+const reimbursementsServer = require('../app');
 const db = require('../db/db.config');
 const loginServerUrl = 'http://localhost:3000';
 const resetId = path.join(__dirname, 'sql', 'resetId.sql');
@@ -61,8 +61,8 @@ describe('Reimbursement API', () => {
 		});
 
 		it('It should GET user reimbursements when user is authorized.', (done) => {
-			chai.request(reimbursementServer)
-				.get('/api/reimbursement')
+			chai.request(reimbursementsServer)
+				.get('/api/reimbursements')
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = 'User reimbursements retrieved.';
@@ -76,8 +76,8 @@ describe('Reimbursement API', () => {
 		});
 
 		it('It should NOT GET user reimbursements when user is authorized.', (done) => {
-			chai.request(reimbursementServer)
-				.get('/api/reimbursement')
+			chai.request(reimbursementsServer)
+				.get('/api/reimbursements')
 				.set('Authorization', jwtNoData)
 				.end((err, res) => {
 					const reqMsg = 'No user reimbursement retrieved.';
@@ -92,8 +92,8 @@ describe('Reimbursement API', () => {
 
 		it('It should GET user reimbursement items when user is authorized.', (done) => {
 			const _reimbursementId = 1;
-			chai.request(reimbursementServer)
-				.get(`/api/reimbursement/${_reimbursementId}/reimbursement-items`)
+			chai.request(reimbursementsServer)
+				.get(`/api/reimbursements/${_reimbursementId}/reimbursement-items`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = 'User reimbursement items retrieved.';
@@ -108,8 +108,8 @@ describe('Reimbursement API', () => {
 
 		it('It should NOT GET user reimbursement items when user is authorized.', (done) => {
 			const _reimbursementId = 0;
-			chai.request(reimbursementServer)
-				.get(`/api/reimbursement/${_reimbursementId}/reimbursement-items`)
+			chai.request(reimbursementsServer)
+				.get(`/api/reimbursements/${_reimbursementId}/reimbursement-items`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = 'No user reimbursement item retrieved.';
@@ -124,8 +124,8 @@ describe('Reimbursement API', () => {
 
 		it('It should GET user reimbursement receipts when user is authorized.', (done) => {
 			const _reimbursementId = 1;
-			chai.request(reimbursementServer)
-				.get(`/api/reimbursement/${_reimbursementId}/receipts`)
+			chai.request(reimbursementsServer)
+				.get(`/api/reimbursements/${_reimbursementId}/receipts`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = 'User reimbursement receipts retrieved.';
@@ -140,8 +140,8 @@ describe('Reimbursement API', () => {
 
 		it('It should NOT GET user reimbursement receipts when user is authorized.', (done) => {
 			const _reimbursementId = 0;
-			chai.request(reimbursementServer)
-				.get(`/api/reimbursement/${_reimbursementId}/receipts`)
+			chai.request(reimbursementsServer)
+				.get(`/api/reimbursements/${_reimbursementId}/receipts`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = 'No user reimbursement receipt retrieved.';
@@ -150,6 +150,20 @@ describe('Reimbursement API', () => {
 					res.body.success.should.be.eql(0);
 					res.body.message.should.be.eql(reqMsg);
 					res.body.receipts.should.be.eql([]);
+					done();
+				});
+		});
+
+		it('It should GET category list when user is authorized.', (done) => {
+			chai.request(reimbursementsServer)
+				.get('/api/reimbursements/categories')
+				.set('Authorization', jwt)
+				.end((err, res) => {
+					const reqMsg = 'Category list retrieved.';
+
+					res.should.have.status(200);
+					res.body.success.should.be.eql(1);
+					res.body.message.should.be.eql(reqMsg);
 					done();
 				});
 		});
@@ -180,8 +194,8 @@ describe('Reimbursement API', () => {
 			const gas = fs.readFileSync(path.join(__dirname, 'img', 'Gas Receipt.jpg'));
 			const toll = fs.readFileSync(path.join(__dirname, 'img', 'Toll Receipt.jpg'));
 
-			chai.request(reimbursementServer)
-				.post('/api/reimbursement/new-reimbursement')
+			chai.request(reimbursementsServer)
+				.post('/api/reimbursements/new-reimbursement')
 				.set('Authorization', jwt)
 				.field('Content-Type', 'multipart/form-data')
 				.field('data', JSON.stringify(info))
@@ -239,8 +253,8 @@ describe('Reimbursement API', () => {
 			const food = fs.readFileSync(path.join(__dirname, 'img', 'Gas Receipt.jpg'));
 			const rent = fs.readFileSync(path.join(__dirname, 'img', 'Toll Receipt.jpg'));
 
-			chai.request(reimbursementServer)
-				.put(`/api/reimbursement/${_reimbursementId}/edit-reimbursement`)
+			chai.request(reimbursementsServer)
+				.put(`/api/reimbursements/${_reimbursementId}/edit-reimbursement`)
 				.set('Authorization', jwt)
 				.field('Content-Type', 'multipart/form-data')
 				.field('data', JSON.stringify(info))
@@ -259,8 +273,8 @@ describe('Reimbursement API', () => {
 		it('It should DELETE selected user reimbursement item when user is authorized.', (done) => {
 			const _reimbursementId = 2;
 			const _itemId = 4;
-			chai.request(reimbursementServer)
-				.delete(`/api/reimbursement/${_reimbursementId}/delete-item/${_itemId}`)
+			chai.request(reimbursementsServer)
+				.delete(`/api/reimbursements/${_reimbursementId}/delete-item/${_itemId}`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = `Reimbursement item with itemId (${_itemId}) deleted.`;
@@ -275,8 +289,8 @@ describe('Reimbursement API', () => {
 		it('It should DELETE selected user reimbursement item when user is authorized.', (done) => {
 			const _reimbursementId = 2;
 			const _itemId = 5;
-			chai.request(reimbursementServer)
-				.delete(`/api/reimbursement/${_reimbursementId}/delete-item/${_itemId}`)
+			chai.request(reimbursementsServer)
+				.delete(`/api/reimbursements/${_reimbursementId}/delete-item/${_itemId}`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = `Reimbursement item with itemId (${_itemId}) deleted.`;
@@ -291,8 +305,8 @@ describe('Reimbursement API', () => {
 		it('It should DELETE selected user reimbursement receipts when user is authorized.', (done) => {
 			const _reimbursementId = 2;
 			const _receiptId = 3;
-			chai.request(reimbursementServer)
-				.delete(`/api/reimbursement/${_reimbursementId}/delete-receipt/${_receiptId}`)
+			chai.request(reimbursementsServer)
+				.delete(`/api/reimbursements/${_reimbursementId}/delete-receipt/${_receiptId}`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = `Receipt with receiptId (${_receiptId}) deleted.`;
@@ -307,8 +321,8 @@ describe('Reimbursement API', () => {
 		it('It should DELETE selected user reimbursement receipts when user is authorized.', (done) => {
 			const _reimbursementId = 2;
 			const _receiptId = 4;
-			chai.request(reimbursementServer)
-				.delete(`/api/reimbursement/${_reimbursementId}/delete-receipt/${_receiptId}`)
+			chai.request(reimbursementsServer)
+				.delete(`/api/reimbursements/${_reimbursementId}/delete-receipt/${_receiptId}`)
 				.set('Authorization', jwt)
 				.end((err, res) => {
 					const reqMsg = `Receipt with receiptId (${_receiptId}) deleted.`;
@@ -322,9 +336,9 @@ describe('Reimbursement API', () => {
 
 		it('It should DELETE selected user reimbursements when user is authorized.', (done) => {
 			const _reimbursementId = 2;
-			chai.request(reimbursementServer)
+			chai.request(reimbursementsServer)
 				.delete(
-					`/api/reimbursement/delete-reimbursement?_reimbursementIds=${_reimbursementId}`
+					`/api/reimbursements/delete-reimbursement?_reimbursementIds=${_reimbursementId}`
 				)
 				.set('Authorization', jwt)
 				.end((err, res) => {
@@ -360,8 +374,8 @@ describe('Reimbursement API', () => {
 		});
 
 		it('It should NOT GET user reimbursements when user is unauthorized.', (done) => {
-			chai.request(reimbursementServer)
-				.get('/api/reimbursement')
+			chai.request(reimbursementsServer)
+				.get('/api/reimbursements')
 				.set('Authorization', jwt || '')
 				.end((err, res) => {
 					res.should.have.status(401);
@@ -371,8 +385,8 @@ describe('Reimbursement API', () => {
 
 		it('It should NOT GET user reimbursement items when user is unauthorized.', (done) => {
 			const _reimbursementId = 1;
-			chai.request(reimbursementServer)
-				.get(`/api/reimbursement/${_reimbursementId}/reimbursement-items`)
+			chai.request(reimbursementsServer)
+				.get(`/api/reimbursements/${_reimbursementId}/reimbursement-items`)
 				.set('Authorization', jwt || '')
 				.end((err, res) => {
 					res.should.have.status(401);
@@ -382,8 +396,18 @@ describe('Reimbursement API', () => {
 
 		it('It should NOT GET user reimbursement receipts when user is unauthorized.', (done) => {
 			const _reimbursementId = 1;
-			chai.request(reimbursementServer)
-				.get(`/api/reimbursement/${_reimbursementId}/receipts`)
+			chai.request(reimbursementsServer)
+				.get(`/api/reimbursements/${_reimbursementId}/receipts`)
+				.set('Authorization', jwt || '')
+				.end((err, res) => {
+					res.should.have.status(401);
+					done();
+				});
+		});
+
+		it('It should NOT GET category list when user is unauthorized.', (done) => {
+			chai.request(reimbursementsServer)
+				.get('/api/reimbursements/categories')
 				.set('Authorization', jwt || '')
 				.end((err, res) => {
 					res.should.have.status(401);
@@ -417,8 +441,8 @@ describe('Reimbursement API', () => {
 			const gas = fs.readFileSync(path.join(__dirname, 'img', 'Gas Receipt.jpg'));
 			const toll = fs.readFileSync(path.join(__dirname, 'img', 'Toll Receipt.jpg'));
 
-			chai.request(reimbursementServer)
-				.post('/api/reimbursement/new-reimbursement')
+			chai.request(reimbursementsServer)
+				.post('/api/reimbursements/new-reimbursement')
 				.set('Authorization', jwt || '')
 				.field('Content-Type', 'multipart/form-data')
 				.field('data', JSON.stringify(info))
@@ -472,8 +496,8 @@ describe('Reimbursement API', () => {
 			const food = fs.readFileSync(path.join(__dirname, 'img', 'Gas Receipt.jpg'));
 			const rent = fs.readFileSync(path.join(__dirname, 'img', 'Toll Receipt.jpg'));
 
-			chai.request(reimbursementServer)
-				.put(`/api/reimbursement/${_reimbursementId}/edit-reimbursement`)
+			chai.request(reimbursementsServer)
+				.put(`/api/reimbursements/${_reimbursementId}/edit-reimbursement`)
 				.set('Authorization', jwt || '')
 				.field('Content-Type', 'multipart/form-data')
 				.field('data', JSON.stringify(info))
@@ -488,8 +512,8 @@ describe('Reimbursement API', () => {
 		it('It should NOT DELETE selected user reimbursement item when user is unauthorized.', (done) => {
 			const _reimbursementId = 2;
 			const _itemId = 3;
-			chai.request(reimbursementServer)
-				.delete(`/api/reimbursement/${_reimbursementId}/delete-item/${_itemId}`)
+			chai.request(reimbursementsServer)
+				.delete(`/api/reimbursements/${_reimbursementId}/delete-item/${_itemId}`)
 				.set('Authorization', jwt || '')
 				.end((err, res) => {
 					res.should.have.status(401);
@@ -500,8 +524,8 @@ describe('Reimbursement API', () => {
 		it('It should NOT DELETE selected user reimbursement receipts when user is unauthorized.', (done) => {
 			const _reimbursementId = 2;
 			const _receiptId = 3;
-			chai.request(reimbursementServer)
-				.delete(`/api/reimbursement/${_reimbursementId}/delete-item/${_receiptId}`)
+			chai.request(reimbursementsServer)
+				.delete(`/api/reimbursements/${_reimbursementId}/delete-item/${_receiptId}`)
 				.set('Authorization', jwt || '')
 				.end((err, res) => {
 					res.should.have.status(401);
@@ -511,9 +535,9 @@ describe('Reimbursement API', () => {
 
 		it('It should NOT DELETE selected user reimbursements when user is unauthorized.', (done) => {
 			const _reimbursementId = 2;
-			chai.request(reimbursementServer)
+			chai.request(reimbursementsServer)
 				.delete(
-					`/api/reimbursement/delete-reimbursement?_reimbursementIds=${_reimbursementId}`
+					`/api/reimbursements/delete-reimbursement?_reimbursementIds=${_reimbursementId}`
 				)
 				.set('Authorization', jwt || '')
 				.end((err, res) => {

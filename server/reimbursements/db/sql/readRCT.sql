@@ -1,6 +1,7 @@
 SELECT
     RCT._receiptId,
     RMB._reimbursementId,
+    RCT.type,
     RCT.fileName,
     RCT.image
 FROM

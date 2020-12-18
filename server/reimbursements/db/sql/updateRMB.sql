@@ -6,7 +6,6 @@ SET
 	totalCost = ?,
 	plannedDate = ?,
 	submittedDate = ?,
-	remarks = ?,
 	updatedDate = NOW()
 WHERE
 	_reimbursementId = ?

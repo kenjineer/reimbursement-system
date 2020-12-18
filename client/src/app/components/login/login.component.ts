@@ -29,8 +29,6 @@ export class LoginComponent implements OnInit {
       this.loginService.login(this.formGroup.value).subscribe(
         (res) => {
           this.loginService.setLocalStorage(res);
-          console.log(res);
-          alert(res.message);
           this.router.navigate(['api/dashboard']);
         },
         (err) => {

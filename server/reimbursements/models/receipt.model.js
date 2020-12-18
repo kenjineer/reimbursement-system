@@ -14,9 +14,9 @@ const deleteReimbursementReceipts = path.join(
 );
 
 module.exports = class Receipt {
-	static createReceipt(_reimbursementId, fileName, image) {
+	static createReceipt(_reimbursementId, type, fileName, image) {
 		const receipt = fs.readFileSync(createReceipt).toString();
-		return db.execute(receipt, [_reimbursementId, fileName, image]);
+		return db.execute(receipt, [_reimbursementId, type, fileName, image]);
 	}
 
 	static readReceipts(_reimbursementId, _userId) {

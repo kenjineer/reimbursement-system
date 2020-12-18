@@ -4,26 +4,26 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
-import { ReimbursementComponent } from './reimbursement.component';
+import { ReimbursementsComponent } from './reimbursements.component';
 
 describe('ReimbursementComponent', () => {
-  let component: ReimbursementComponent;
-  let fixture: ComponentFixture<ReimbursementComponent>;
+  let component: ReimbursementsComponent;
+  let fixture: ComponentFixture<ReimbursementsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReimbursementComponent ],
+      declarations: [ReimbursementsComponent],
       imports: [
         NoopAnimationsModule,
         MatPaginatorModule,
         MatSortModule,
         MatTableModule,
-      ]
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReimbursementComponent);
+    fixture = TestBed.createComponent(ReimbursementsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

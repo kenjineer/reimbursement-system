@@ -2,6 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+const Category = require('../models/category.model');
 const Receipt = require('../models/receipt.model');
 const Reimbursement = require('../models/reimbursement.model');
 const ReimbursementItem = require('../models/reimbursementitem.model');
@@ -103,6 +104,23 @@ exports.getReceipts = async (req, res) => {
 	}
 };
 
+exports.getCategories = async (req, res) => {
+	try {
+		const [categories] = await Category.readCategories();
+
+		const jsonRes = {
+			success: 1,
+			message: 'Category list retrieved.',
+			categories: categories,
+		};
+
+		return res.status(200).send(jsonRes);
+	} catch (err) {
+		console.log(err);
+		return res.status(500).send(err);
+	}
+};
+
 exports.postNewReimbursement = async (req, res) => {
 	const user = getAuthUser();
 	const data = JSON.parse(req.body.data);
@@ -142,6 +160,7 @@ exports.postNewReimbursement = async (req, res) => {
 				create.push(
 					Receipt.createReceipt(
 						reimbursement[0]._reimbursementId,
+						'image/' + filename.slice(filename.indexOf('.') + 1),
 						filename,
 						fs.readFileSync(path.join(UPLOAD_DIR, filename))
 					)
@@ -236,6 +255,7 @@ exports.putReimbursement = async (req, res) => {
 			update.push(
 				Receipt.createReceipt(
 					_reimbursementId,
+					'image/' + filename.slice(filename.indexOf('.') + 1),
 					filename,
 					fs.readFileSync(path.join(UPLOAD_DIR, filename))
 				)

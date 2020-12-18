@@ -27,6 +27,9 @@
               "src/theme.scss",
               "src/styles.css"
             ],
+            "allowedCommonJsDependencies": [
+              "apexcharts"
+            ],
             "scripts": []
           },
           "configurations": {
