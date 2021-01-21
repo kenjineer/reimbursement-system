@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
@@ -43,7 +44,7 @@ loginApp.use(bodyParser.urlencoded({ extended: false }));
 loginApp.use(express.json());
 loginApp.use(passport.initialize());
 
-loginApp.use('/api', loginRoute);
+loginApp.use('/api/v1', loginRoute);
 
 loginApp.listen(PORT, () => {
 	console.log(`Login App listening on port ${PORT}.`);

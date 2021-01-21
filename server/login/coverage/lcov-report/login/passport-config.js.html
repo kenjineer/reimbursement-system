@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.93% </span>
+                <span class="strong">97.14% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/41</span>
+                <span class='fraction'>34/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/40</span>
+                <span class='fraction'>34/34</span>
             </div>
         
             
@@ -122,20 +122,14 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
@@ -163,21 +157,13 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -206,50 +192,43 @@ const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
 &nbsp;
-exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) =&gt; {
+exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmail) =&gt; {
 	const authenticateUser = async (username, password, done) =&gt; {
 		try {
 			const isEmail = joi.string().email().validate(username);
-			const isId = joi.number().positive().integer().max(1231999999).validate(username);
+			const isNum = joi.number().validate(username.replace('-', ''));
+			const isId = joi.string().min(7).max(10).validate(username.replace('-', ''));
 			let user;
 &nbsp;
 			if (!isEmail.error) {
-				const [result] = await getUserByEmail(username);
+				const [result] = await readUserByEmail(username);
 				user = result[0];
-			} else if (!isId.error) {
-				const [result] = await getUserById(username);
+			} else if (!isNum.error &amp;&amp; !isId.error) {
+				const [result] = await readUserById(isId.value);
 				user = result[0];
 			} else {
-				const [result] = await getUserByUsername(username);
+				const [result] = await readUserByUsername(username);
 				user = result[0];
 			}
 &nbsp;
 			if (!user) {
-				return done(null, false, { message: 'No user with that id/username/email.' });
+				return done(null, false, { error_message: 'No user with that id/username/email.' });
 			}
 &nbsp;
 			if (await bcrypt.compare(password, user.password)) {
 				const issuedJwt = await issueJwt(user);
 				return done(null, user, issuedJwt);
 			} else {
-				return done(null, false, { message: 'Password incorrect.' });
+				return done(null, false, { error_message: 'Password incorrect.' });
 			}
-		} catch (err) {
-<span class="cstat-no" title="statement not covered" >			console.log(err);</span>
-<span class="cstat-no" title="statement not covered" >			return done(err);</span>
+		} catch (err) /* istanbul ignore next */ {
+			console.log(err);
+			return done(err);
 		}
 	};
 &nbsp;
 	passport.use('login', new LocalStrategy({ session: false }, authenticateUser));
 	passport.serializeUser(<span class="fstat-no" title="function not covered" >(u</span>ser, done) =&gt; <span class="cstat-no" title="statement not covered" >done(null, user._userId))</span>;
-	passport.deserializeUser(<span class="fstat-no" title="function not covered" >(_</span>userId, done) =&gt; {
-<span class="cstat-no" title="statement not covered" >		try {</span>
-<span class="cstat-no" title="statement not covered" >			return done(null, getUserById(_userId));</span>
-		} catch (err) {
-<span class="cstat-no" title="statement not covered" >			console.log(err);</span>
-<span class="cstat-no" title="statement not covered" >			return done(err);</span>
-		}
-	});
 };
 &nbsp;
 const issueJwt = (user) =&gt; {
@@ -280,7 +259,7 @@ const issueJwt = (user) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Nov 05 2020 10:30:13 GMT+0800 (Philippine Standard Time)
+                at Wed Jan 20 2021 16:56:40 GMT+0800 (Philippine Standard Time)
             </div>
         </div>
         <script src="../prettify.js"></script>

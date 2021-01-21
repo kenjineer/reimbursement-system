@@ -7,13 +7,13 @@ INSERT INTO
         purpose,
         totalCost,
         plannedDate,
-        approved,
-        submittedDate,
+        status,
         approvalDate,
         rejectionDate,
+        releaseDate,
         remarks,
         createdDate,
         updatedDate
     )
 VALUES
-(?, ?, ?, ?, ?, ?, NULL, NOW(), NULL, NULL, ?, NOW(), NOW());
+(?, ?, ?, ?, ?, ?, 1, NULL, NULL, NULL, ?, NOW(), NOW());

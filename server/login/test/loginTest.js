@@ -6,14 +6,14 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('Login API', () => {
-	describe('POST /api/login', () => {
+	describe('POST /api/v1/login', () => {
 		it('It should POST login credentials using id', (done) => {
 			const user = {
-				username: 902191173,
+				username: '090219-1173',
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -34,7 +34,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -55,7 +55,7 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
@@ -70,20 +70,20 @@ describe('Login API', () => {
 				});
 		});
 
-		it('It should NOT POST login credentials using id greater than 10 digits', (done) => {
+		it('It should NOT POST login credentials using id with incorrect format', (done) => {
 			const user = {
-				username: 12345678901,
+				username: '123456-78901',
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'No user with that id/username/email.',
+							error_message: 'No user with that id/username/email.',
 						},
 					};
 
@@ -95,18 +95,18 @@ describe('Login API', () => {
 
 		it('It should NOT POST login credentials using non-existing id', (done) => {
 			const user = {
-				username: 1231999999,
+				username: '123199-9999',
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'No user with that id/username/email.',
+							error_message: 'No user with that id/username/email.',
 						},
 					};
 
@@ -122,14 +122,14 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'No user with that id/username/email.',
+							error_message: 'No user with that id/username/email.',
 						},
 					};
 
@@ -145,14 +145,14 @@ describe('Login API', () => {
 				password: 'kenken',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'No user with that id/username/email.',
+							error_message: 'No user with that id/username/email.',
 						},
 					};
 
@@ -164,18 +164,18 @@ describe('Login API', () => {
 
 		it('It should NOT POST login credentials using id with incorrect password', (done) => {
 			const user = {
-				username: 902191173,
+				username: '090219-1173',
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'Password incorrect.',
+							error_message: 'Password incorrect.',
 						},
 					};
 
@@ -191,14 +191,14 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'Password incorrect.',
+							error_message: 'Password incorrect.',
 						},
 					};
 
@@ -214,14 +214,14 @@ describe('Login API', () => {
 				password: 'incorrect',
 			};
 			chai.request(loginServer)
-				.post('/api/login')
+				.post('/api/v1/login')
 				.send(user)
 				.end((err, res) => {
 					const checkObj = {
 						success: 0,
 						message: 'Login failed.',
 						jwt: {
-							message: 'Password incorrect.',
+							error_message: 'Password incorrect.',
 						},
 					};
 

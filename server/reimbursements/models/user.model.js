@@ -2,8 +2,10 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db/db.config');
 
-const readUserById = path.join(__dirname, '..', 'db', 'sql', 'readUSR.sql');
-const readManagerByDev = path.join(__dirname, '..', 'db', 'sql', 'readUSR-manager.sql');
+const dir = path.join(__dirname, '..', 'db', 'sql');
+
+const readUserById = path.join(dir, 'readUSR.sql');
+const readManagerByDev = path.join(dir, 'readUSR-manager.sql');
 
 module.exports = class User {
 	static readUserById(_userId) {

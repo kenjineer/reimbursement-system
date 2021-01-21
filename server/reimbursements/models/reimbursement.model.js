@@ -2,11 +2,17 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db/db.config');
 
-const createReimbursement = path.join(__dirname, '..', 'db', 'sql', 'createRMB.sql');
-const readReimbursements = path.join(__dirname, '..', 'db', 'sql', 'readRMB.sql');
-const readSelectedReimbursements = path.join(__dirname, '..', 'db', 'sql', 'readRMB-selected.sql');
-const updateReimbursement = path.join(__dirname, '..', 'db', 'sql', 'updateRMB.sql');
-const deleteReimbursements = path.join(__dirname, '..', 'db', 'sql', 'deleteRMB.sql');
+const dir = path.join(__dirname, '..', 'db', 'sql');
+
+const createReimbursement = path.join(dir, 'createRMB.sql');
+const readReimbursementsEmp = path.join(dir, 'readRMB-emp.sql');
+const readReimbursementsMgr = path.join(dir, 'readRMB-mgr.sql');
+const readReimbursementsFin = path.join(dir, 'readRMB-fin.sql');
+const updateReimbursement = path.join(dir, 'updateRMB.sql');
+const updateReimbursementApprove = path.join(dir, 'updateRMB-approve.sql');
+const updateReimbursementReject = path.join(dir, 'updateRMB-reject.sql');
+const updateReimbursementRelease = path.join(dir, 'updateRMB-release.sql');
+const deleteReimbursement = path.join(dir, 'deleteRMB.sql');
 
 module.exports = class Reimbursement {
 	static createReimbursement(
@@ -30,14 +36,19 @@ module.exports = class Reimbursement {
 		]);
 	}
 
-	static readReimbursements(_userId) {
-		const reimbursement = fs.readFileSync(readReimbursements).toString();
+	static readReimbursementsEmp(_userId) {
+		const reimbursement = fs.readFileSync(readReimbursementsEmp).toString();
 		return db.execute(reimbursement, [_userId]);
 	}
 
-	static readSelectedReimbursements(_reimbursementId, _userId) {
-		const reimbursement = fs.readFileSync(readSelectedReimbursements).toString();
-		return db.execute(reimbursement, [_reimbursementId, _userId]);
+	static readReimbursementsMgr(_userId) {
+		const reimbursement = fs.readFileSync(readReimbursementsMgr).toString();
+		return db.execute(reimbursement, [_userId]);
+	}
+
+	static readReimbursementsFin(_userId) {
+		const reimbursement = fs.readFileSync(readReimbursementsFin).toString();
+		return db.execute(reimbursement, [_userId]);
 	}
 
 	static updateReimbursement(
@@ -63,8 +74,23 @@ module.exports = class Reimbursement {
 		]);
 	}
 
-	static deleteReimbursements(_reimbursementIds) {
-		const reimbursement = fs.readFileSync(deleteReimbursements).toString();
-		return db.execute(reimbursement, [_reimbursementIds]);
+	static updateReimbursementApprove(_reimbursementId) {
+		const reimbursement = fs.readFileSync(updateReimbursementApprove).toString();
+		return db.execute(reimbursement, [_reimbursementId]);
+	}
+
+	static updateReimbursementReject(_reimbursementId) {
+		const reimbursement = fs.readFileSync(updateReimbursementReject).toString();
+		return db.execute(reimbursement, [_reimbursementId]);
+	}
+
+	static updateReimbursementRelease(_reimbursementId) {
+		const reimbursement = fs.readFileSync(updateReimbursementRelease).toString();
+		return db.execute(reimbursement, [_reimbursementId]);
+	}
+
+	static deleteReimbursement(_reimbursementId) {
+		const reimbursement = fs.readFileSync(deleteReimbursement).toString();
+		return db.execute(reimbursement, [_reimbursementId]);
 	}
 };

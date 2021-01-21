@@ -1,9 +1,10 @@
+/* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
 
 // Declare ports
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 
 // Import Express
 const express = require('express');
@@ -34,7 +35,11 @@ reimbursementApp.use(bodyParser.urlencoded({ extended: false }));
 reimbursementApp.use(express.json());
 reimbursementApp.use(passport.initialize());
 
-reimbursementApp.use('/api', passport.authenticate('jwt', { session: false }), reimbursementsRoute);
+reimbursementApp.use(
+	'/api/v1',
+	passport.authenticate('jwt', { session: false }),
+	reimbursementsRoute
+);
 
 reimbursementApp.listen(PORT, () => {
 	console.log(`Reimbursements App listening on port ${PORT}`);

@@ -14,7 +14,7 @@ COPY ./package.json ./package.json
 RUN npm install
 
 # Open port
-EXPOSE 3001
+EXPOSE 3002
 
 # Bundle app source
 COPY . .

@@ -1,9 +1,10 @@
+/* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
 
 // Declare ports
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // Import Express
 const express = require('express');
@@ -34,7 +35,7 @@ dashboardApp.use(bodyParser.urlencoded({ extended: false }));
 dashboardApp.use(express.json());
 dashboardApp.use(passport.initialize());
 
-dashboardApp.use('/api', passport.authenticate('jwt', { session: false }), dashboardRoute);
+dashboardApp.use('/api/v1', passport.authenticate('jwt', { session: false }), dashboardRoute);
 
 dashboardApp.listen(PORT, () => {
 	console.log(`Dashboard App listening on port ${PORT}`);

@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const uploadDir = path.join(__dirname, 'assets', 'uploads');
 
+// Filter file uploads to images only
 const imageFilter = (req, file, cb) => {
 	if (file.mimetype.startsWith('image')) {
 		cb(null, true);
@@ -10,6 +11,7 @@ const imageFilter = (req, file, cb) => {
 	}
 };
 
+// Set upload storage and filename
 const storage = multer.diskStorage({
 	destination: uploadDir,
 	filename: (req, file, cb) => {
@@ -20,6 +22,7 @@ const storage = multer.diskStorage({
 	},
 });
 
+// Set up multer
 const uploadFile = multer({
 	storage: storage,
 	fileFilter: imageFilter,

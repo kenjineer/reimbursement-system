@@ -1,5 +1,5 @@
 SELECT
-    _categoryId,
-    categoryName
+    CTG._categoryId,
+    CTG.categoryName
 FROM
-    categories;
+    categories AS CTG;

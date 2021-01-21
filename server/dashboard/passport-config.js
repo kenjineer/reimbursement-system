@@ -3,11 +3,13 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const user = [];
 
+// Get logged-in user information
 exports.getAuthUser = () => {
 	return user[0];
 };
 
 exports.initialize = (passport, readUserById) => {
+	// Extract JWT from header
 	const options = {
 		jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 		secretOrKey: process.env.SESSION_SECRET,
@@ -18,10 +20,11 @@ exports.initialize = (passport, readUserById) => {
 		'jwt',
 		new JwtStrategy(options, async (jwtPayload, done) => {
 			try {
+				// Get user information by _userId
 				const [result] = await readUserById(jwtPayload.sub);
 				user.push(result[0]);
 				return done(null, user[0]);
-			} catch (err) {
+			} catch (err) /* istanbul ignore next */ {
 				done(err);
 			}
 		})

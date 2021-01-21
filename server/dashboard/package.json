@@ -1,7 +1,7 @@
 {
   "name": "dashboard",
   "version": "1.0.0",
-  "description": "A reimbursement system which has the functionality to accept or reject plans and applications for reimbursement for managers, file plans and applications for reimbursement for employees, and system administration for admins.",
+  "description": "A reimbursement system which has the functionality to accept or reject reimbursement applications for managers, release reimbursements for finance officers, and file reimbursement applications for employees.",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
