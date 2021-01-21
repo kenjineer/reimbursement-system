@@ -1,0 +1,11 @@
+.full-width-table {
+  width: 100%;
+}
+
+tr.hover-row:hover {
+  background: whitesmoke;
+}
+
+tr.hover-row:active {
+  background: #efefef;
+}

@@ -1,18 +1,15 @@
 SELECT
     USR._userId,
-    USR._devId,
     DEV.devName,
-    DEV.devCode,
-    USR._officeId,
     OFC.officeName,
-    OFC.officeCode,
-    USR._positionId,
     POS.positionName,
     USR.firstname,
     USR.middlename,
     USR.lastname,
-    USR.gender,
-    USR.authority
+    USR.postfix,
+    USR.username,
+    USR.email,
+    USR.gender
 FROM users AS USR
     INNER JOIN devs AS DEV
     ON USR._devId = DEV._devId

@@ -20,7 +20,7 @@ const routes: Routes = [
     canActivate: [AccessGuard],
   },
   {
-    path: 'api/reimbursement',
+    path: 'api/reimbursements',
     component: MainComponent,
     data: { requiredLogin: true },
     canActivate: [AccessGuard],

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/15</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/15</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -84,14 +84,7 @@
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -100,12 +93,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -117,46 +105,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Reimbursements = require('../models/reimbursement.model');
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Reimbursement = require('../models/reimbursement.model');
 const User = require('../models/user.model');
 const getAuthUser = require('../passport-config').getAuthUser;
 &nbsp;
-exports.getUserReimbursements = async (req, res) =&gt; {
+exports.getUserDashboard = async (req, res) =&gt; {
 	const user = getAuthUser();
 &nbsp;
 	try {
-		const [manager] = await User.getManagerByDev(user._devId);
+		const [ctgReimbursements] = await Reimbursement.readReimbursementCategorized(user._userId);
+		const [pndReimbursements] = await Reimbursement.readReimbursementPending(user._userId);
+		const [rctReimbursements] = await Reimbursement.readReimbursementRecent(user._userId);
+		const [rjtReimbursements] = await Reimbursement.readReimbursementRejected(user._userId);
 &nbsp;
-		<span class="missing-if-branch" title="else path not taken" >E</span>if (manager[0]) {
-			const [categoryRank] = await Reimbursements.getCategoryRank(
-				user._userId,
-				manager[0]._userId
-			);
-			const [pendings] = await Reimbursements.getPendings(user._userId, manager[0]._userId);
-			const [recent] = await Reimbursements.getRecent(user._userId, manager[0]._userId);
+		const jsonRes = {
+			user: user,
+			ctgReimbursements: ctgReimbursements,
+			pndReimbursements: pndReimbursements,
+			rctReimbursements: rctReimbursements,
+			rjtReimbursementCnt: rjtReimbursements[0].cnt,
+		};
 &nbsp;
-			const jsonRes = {
-				success: 1,
-				message: 'User info retrieved.',
-				user: user,
-				categoryRank: categoryRank,
-				pendings: pendings,
-				recent: recent,
-			};
-&nbsp;
-			return res.status(200).send(jsonRes);
-		}
-	} catch (err) {
-<span class="cstat-no" title="statement not covered" >		console.log(err);</span>
-<span class="cstat-no" title="statement not covered" >		return res.status(500).send(jsonRes);</span>
+		return res.status(200).send(jsonRes);
+	} catch (err) /* istanbul ignore next */ {
+		console.log(err);
+		return res.status(503).send({ error_message: 'Cannot connect to database / System Error' });
 	}
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -166,7 +145,7 @@ exports.getUserReimbursements = async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Nov 05 2020 10:31:53 GMT+0800 (Philippine Standard Time)
+                at Wed Jan 20 2021 19:03:12 GMT+0800 (Philippine Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

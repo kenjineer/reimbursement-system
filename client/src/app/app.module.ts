@@ -28,7 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AccountComponent } from './components/account/account.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { ReimbursementComponent } from './components/reimbursement/reimbursement.component';
+import { ReimbursementsComponent } from './components/reimbursements/reimbursements.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -36,6 +36,11 @@ import { PendingTableComponent } from './components/dashboard-items/pending-tabl
 import { RecentTableComponent } from './components/dashboard-items/recent-table/recent-table.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CategoryChartComponent } from './components/dashboard-items/category-chart/category-chart.component';
+import { ReimbursementDialogComponent } from './components/reimbursements-items/reimbursement-dialog/reimbursement-dialog/reimbursement-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -45,10 +50,11 @@ import { CategoryChartComponent } from './components/dashboard-items/category-ch
     MainNavComponent,
     MainComponent,
     AccountComponent,
-    ReimbursementComponent,
+    ReimbursementsComponent,
     PendingTableComponent,
     RecentTableComponent,
     CategoryChartComponent,
+    ReimbursementDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +80,10 @@ import { CategoryChartComponent } from './components/dashboard-items/category-ch
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSlideToggleModule,
     NgApexchartsModule,
   ],
   providers: [

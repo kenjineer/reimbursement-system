@@ -1,32 +1,21 @@
-SELECT
+SELECT 
 	RMB._reimbursementId,
-    RMB._userId,
-    TRIM(CONCAT_WS(" ", USR.firstname, USR.middlename, USR.lastname, USR.postfix)) AS employeeName,
-    RMB._managerId,
-    TRIM(CONCAT_WS(" ", MGR.firstname, MGR.middlename, MGR.lastname, MGR.postfix)) AS managerName,
     CTG.categoryName,
     RMB.purpose,
     RMB.totalCost,
     RMB.plannedDate,
-    RMB.approved,
-    RMB.submittedDate,
+    RMB.status,
     RMB.approvalDate,
     RMB.rejectionDate,
-    RMB.createdDate,
-    RMB.updatedDate
+    RMB.releaseDate,
+    RMB.createdDate
 FROM
 	reimbursements AS RMB
-    INNER JOIN users AS USR
-    ON RMB._userId = USR._userId
-    INNER JOIN users AS MGR
-    ON RMB._managerId = MGR._userId
     INNER JOIN categories AS CTG
     ON RMB._categoryId = CTG._categoryId
 WHERE
 	RMB._userId = ?
     AND
-    RMB._managerId = ?
-    AND
-    ISNULL(RMB.approved)
+    RMB.status = 1
 ORDER BY
 	RMB.createdDate;

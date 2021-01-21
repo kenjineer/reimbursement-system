@@ -1,0 +1,90 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+    </head>
+
+    <body>
+        <div>Dear <%= employee.gender===0 ? "Mr." : "Ms." %>
+                <%= employee.employeeName %>
+        </div>
+        <br>
+        <div>Your Reimbursement Application for "<%= rlsReimbursement.purpose %>" has been Released</div>
+        <br><br>
+        <div>
+            <table cellpadding="3px" border="1px" style="width: 740px; table-layout: fixed;" height="256">
+                <tbody>
+                    <tr>
+                        <td>Employee ID</td>
+                        <td>
+                            <%= employee._employeeId %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Reimbursement No.</td>
+                        <td>
+                            <%= _reimbursementId %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>
+                            <%= rlsReimbursement.categoryName %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Purpose</td>
+                        <td>
+                            <%= rlsReimbursement.purpose %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total Cost</td>
+                        <td>
+                            <%= rlsReimbursement.totalCost %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Planned Date</td>
+                        <td>
+                            <%= rlsReimbursement.plannedDate %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            Released
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Release Date</td>
+                        <td>
+                            <%= rlsReimbursement.approvalDate %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Application Date</td>
+                        <td>
+                            <%= rlsReimbursement.createdDate %>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br><br>
+        <div>Remarks: <%= remarks %>
+        </div>
+        <br>
+        <div>Thank you and regards,</div>
+        <div>--</div>
+        <br>
+        <div>
+            <%= finOfficer.managerName %>
+        </div>
+        <div>
+            <%= finOfficer.positionName %>
+        </div>
+        <div>
+            <%= finOfficer.devName %>
+        </div>
+        <div>
+            <%= finOfficer.officeName %>
+        </div>

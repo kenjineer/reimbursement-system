@@ -3,35 +3,42 @@ const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const bcrypt = require('bcrypt');
 
-exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) => {
+exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmail) => {
 	const authenticateUser = async (username, password, done) => {
 		try {
+			// Validate credential type
 			const isEmail = joi.string().email().validate(username);
-			const isId = joi.number().positive().integer().max(1231999999).validate(username);
+			const isNum = joi.number().validate(username.replace('-', ''));
+			const isId = joi.string().min(7).max(10).validate(username.replace('-', ''));
 			let user;
 
 			if (!isEmail.error) {
-				const [result] = await getUserByEmail(username);
+				// Validated as email successfully
+				const [result] = await readUserByEmail(username);
 				user = result[0];
-			} else if (!isId.error) {
-				const [result] = await getUserById(username);
+			} else if (!isNum.error && !isId.error) {
+				// Validated as _userId successfully
+				const [result] = await readUserById(isId.value);
 				user = result[0];
 			} else {
-				const [result] = await getUserByUsername(username);
+				// Validated as username
+				const [result] = await readUserByUsername(username);
 				user = result[0];
 			}
 
 			if (!user) {
-				return done(null, false, { message: 'No user with that id/username/email.' });
+				// Validate user existence
+				return done(null, false, { error_message: 'No user with that id/username/email.' });
 			}
 
 			if (await bcrypt.compare(password, user.password)) {
+				// Validate login password
 				const issuedJwt = await issueJwt(user);
 				return done(null, user, issuedJwt);
 			} else {
-				return done(null, false, { message: 'Password incorrect.' });
+				return done(null, false, { error_message: 'Password incorrect.' });
 			}
-		} catch (err) {
+		} catch (err) /* istanbul ignore next */ {
 			console.log(err);
 			return done(err);
 		}
@@ -39,14 +46,6 @@ exports.initialize = (passport, getUserById, getUserByUsername, getUserByEmail) 
 
 	passport.use('login', new LocalStrategy({ session: false }, authenticateUser));
 	passport.serializeUser((user, done) => done(null, user._userId));
-	passport.deserializeUser((_userId, done) => {
-		try {
-			return done(null, getUserById(_userId));
-		} catch (err) {
-			console.log(err);
-			return done(err);
-		}
-	});
 };
 
 const issueJwt = (user) => {
@@ -54,11 +53,14 @@ const issueJwt = (user) => {
 	const expiryNum = 8;
 	const datetimeType = 'h';
 	const expiresIn = `${expiryNum}${datetimeType}`;
+
+	// Create JWT payload
 	const payload = {
 		sub: _userId,
 		iat: Date.now(),
 	};
 
+	// Create a signed JWT with payload
 	const signedToken = jwt.sign(payload, process.env.SESSION_SECRET, {
 		expiresIn: expiresIn,
 		algorithm: 'HS256',

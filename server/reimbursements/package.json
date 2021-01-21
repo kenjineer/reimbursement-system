@@ -1,0 +1,41 @@
+{
+  "name": "reimbursements",
+  "version": "1.0.0",
+  "description": "A reimbursement system which has the functionality to accept or reject reimbursement applications for managers, release reimbursements for finance officers, and file reimbursement applications for employees.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "start-sonar": "StartSonar.bat",
+    "sonar-scan": "sonar-scanner.bat",
+    "unit-test": "mocha --exit",
+    "coverage-test": "nyc --reporter=lcov --reporter=text npm run unit-test",
+    "code-test": "npm-run-all -s start-sonar sonar-scan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenjineer/reimbursement-system.git"
+  },
+  "author": "Kenneth Karamihan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kenjineer/reimbursement-system/issues"
+  },
+  "homepage": "https://github.com/kenjineer/reimbursement-system#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "multer": "^1.4.2",
+    "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0"
+  }
+}

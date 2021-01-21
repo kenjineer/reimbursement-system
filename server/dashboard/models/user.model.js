@@ -2,17 +2,13 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db/db.config');
 
-const readUserById = path.join(__dirname, '..', 'db', 'sql', 'readUSR.sql');
-const readManagerByDev = path.join(__dirname, '..', 'db', 'sql', 'readUSR-manager.sql');
+const dir = path.join(__dirname, '..', 'db', 'sql');
+
+const readUserById = path.join(dir, 'readUSR.sql');
 
 module.exports = class User {
-	static getUserById(_userId) {
+	static readUserById(_userId) {
 		const user = fs.readFileSync(readUserById).toString();
 		return db.execute(user, [_userId]);
-	}
-
-	static getManagerByDev(_devId) {
-		const user = fs.readFileSync(readManagerByDev).toString();
-		return db.execute(user, [_devId]);
 	}
 };

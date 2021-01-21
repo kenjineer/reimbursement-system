@@ -1,0 +1,52 @@
+.grid-container {
+  margin: 20px;
+}
+
+.item-card {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.item-card-content {
+  text-align: left;
+}
+
+.close-button {
+  float: right;
+  top: -24px;
+  right: -24px;
+}
+
+.mat-dialog-content {
+  height: calc(100% - 96px);
+  max-height: unset;
+}
+
+.mat-form-field {
+  margin-left: 0.5rem;
+}
+
+.remarks-field {
+  width: 100%;
+}
+
+.remarks {
+  height: 100px;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-btn {
+  margin-bottom: 0.5rem;
+}
