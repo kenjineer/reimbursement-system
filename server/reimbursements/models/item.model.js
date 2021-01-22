@@ -4,16 +4,16 @@ const db = require('../db/db.config');
 
 const dir = path.join(__dirname, '..', 'db', 'sql');
 
-const createItem = path.join(dir, 'createRBIT.sql');
+const createItem = path.join(dir, 'createITM.sql');
 const readItems = path.join(dir, 'readITM.sql');
-const updateItem = path.join(dir, 'updateRBIT.sql');
-const deleteItem = path.join(dir, 'deleteRBIT.sql');
-const deleteItems = path.join(dir, 'deleteRBIT-selectedRMB.sql');
+const updateItem = path.join(dir, 'updateITM.sql');
+const deleteItem = path.join(dir, 'deleteITM.sql');
+const deleteItems = path.join(dir, 'deleteITM-selectedRMB.sql');
 
 module.exports = class Reimbursement {
-	static createItem(_reimbursementId, item, qty, cost) {
+	static createItem(_reimbursementId, newItem, qty, cost) {
 		const item = fs.readFileSync(createItem).toString();
-		return db.execute(item, [_reimbursementId, item, qty, cost]);
+		return db.execute(item, [_reimbursementId, newItem, qty, cost]);
 	}
 
 	static readItems(_reimbursementId) {
@@ -21,9 +21,9 @@ module.exports = class Reimbursement {
 		return db.execute(item, [_reimbursementId]);
 	}
 
-	static updateItem(item, qty, cost, _itemId, _reimbursementId) {
+	static updateItem(itemUpdate, qty, cost, _itemId, _reimbursementId) {
 		const item = fs.readFileSync(updateItem).toString();
-		return db.execute(item, [item, qty, cost, _itemId, _reimbursementId]);
+		return db.execute(item, [itemUpdate, qty, cost, _itemId, _reimbursementId]);
 	}
 
 	static deleteItem(_itemId, _reimbursementId) {
@@ -31,8 +31,8 @@ module.exports = class Reimbursement {
 		return db.execute(item, [_itemId, _reimbursementId]);
 	}
 
-	static deleteItems(_reimbursementIds) {
+	static deleteItems(_reimbursementId) {
 		const item = fs.readFileSync(deleteItems).toString();
-		return db.execute(item, [_reimbursementIds]);
+		return db.execute(item, [_reimbursementId]);
 	}
 };

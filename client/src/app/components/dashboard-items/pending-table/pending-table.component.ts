@@ -26,7 +26,7 @@ export class PendingTableComponent implements AfterViewInit, OnInit {
     'purpose',
     'totalCost',
     'plannedDate',
-    'submittedDate',
+    'createdDate',
   ];
 
   ngOnInit() {

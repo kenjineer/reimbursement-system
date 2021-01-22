@@ -9,3 +9,9 @@ tr.hover-row:hover {
 tr.hover-row:active {
   background: #efefef;
 }
+
+.floating-btn {
+  position: fixed;
+  bottom: 5vh;
+  right: 5vw;
+}

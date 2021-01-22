@@ -4,10 +4,10 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
 import User from 'src/app/models/user.model';
 import {
-  CategoryRank,
-  PendingReimbursements,
-  RecentReimbursements,
-} from 'src/app/models/dashboard.model';
+  CategorizedReimbursement,
+  PendingReimbursement,
+  RecentReimbursement,
+} from 'src/app/models/reimbursement.model';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login/login.service';
 import { Observable } from 'rxjs';
@@ -34,9 +34,9 @@ export class DashboardComponent implements OnInit {
 
   isLoaded: boolean;
   user: User;
-  categoryRank: CategoryRank[] = [];
-  pendingReimbursements: PendingReimbursements[] = [];
-  recentReimbursements: RecentReimbursements[] = [];
+  categorizedReimbursements: CategorizedReimbursement[] = [];
+  pendingReimbursements: PendingReimbursement[] = [];
+  recentReimbursements: RecentReimbursement[] = [];
   totalReimbursements: number = 0;
   totalRejected: number = 0;
   cards: Observable<{ title: string; cols: number; rows: number }[]>;
@@ -70,17 +70,17 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getUserDashboard().subscribe(
       (res) => {
         this.user = res.user;
-        this.categoryRank = res.categoryRank;
-        this.pendingReimbursements = res.pendings;
-        this.recentReimbursements = res.recent;
-        this.totalRejected = res.rejectedCnt;
+        this.categorizedReimbursements = res.ctgReimbursements;
+        this.pendingReimbursements = res.pndReimbursements;
+        this.recentReimbursements = res.rctReimbursements;
+        this.totalRejected = res.rjtReimbursementCnt;
 
         PendingTableComponent.data = this.pendingReimbursements;
         RecentTableComponent.data = this.recentReimbursements;
         CategoryChartComponent.categories = [];
         CategoryChartComponent.categoryOccurences = [];
 
-        for (let item of this.categoryRank) {
+        for (let item of this.categorizedReimbursements) {
           this.totalReimbursements += item.total;
           CategoryChartComponent.categories.push(item.categoryName);
           CategoryChartComponent.categoryOccurences.push(item.total);
@@ -90,9 +90,7 @@ export class DashboardComponent implements OnInit {
       },
       (err) => {
         console.log(err);
-        alert(`${err.error.message}\n${err.error.jwt.message}`);
-        this.loginService.logout();
-        this.router.navigate(['api/login']);
+        alert(err.error.message);
       }
     );
   }

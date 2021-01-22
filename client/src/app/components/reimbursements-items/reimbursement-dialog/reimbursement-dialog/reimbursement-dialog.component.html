@@ -5,7 +5,7 @@
 </h1>
 <h1 mat-dialog-title *ngIf="isAddReimbursement">New Reimbursement</h1>
 <div mat-dialog-content>
-    <h2 *ngIf="!isAddReimbursement">
+    <h2 *ngIf="!isAddReimbursement && reimbursementFormGroup.controls['status'].value === 1">
         <mat-slide-toggle [(ngModel)]="isEditReimbursement" (change)="toggleEdit()">Edit
         </mat-slide-toggle>
     </h2>
@@ -29,7 +29,8 @@
         <mat-label>Purpose</mat-label>
         <input matInput formControlName="purpose" required>
         <mat-error *ngIf="reimbursementFormGroup.controls['purpose'].hasError('required')">Please provide a
-            <strong>purpose</strong></mat-error>
+            <strong>purpose</strong>
+        </mat-error>
         <mat-hint>{{reimbursementFormGroup.controls['purpose'].value?.sound}}</mat-hint>
     </mat-form-field>
 
@@ -87,7 +88,8 @@
                                 (change)="computeTotal()">
                             <mat-error *ngIf="itemFormGroup[i].controls['qty'].hasError('required')">Please provide
                                 a
-                                <strong>quantity</strong></mat-error>
+                                <strong>quantity</strong>
+                            </mat-error>
                             <mat-hint>{{itemFormGroup[i].controls['qty'].value?.sound}}</mat-hint>
                         </mat-form-field>
 
@@ -97,7 +99,8 @@
                             <input matInput formControlName="cost" required type="number" step=".01" min="0.00"
                                 (focusout)="formatMoney($event, i)" (change)="computeTotal()">
                             <mat-error *ngIf="itemFormGroup[i].controls['cost'].hasError('required')">Please provide a
-                                <strong>cost</strong></mat-error>
+                                <strong>cost</strong>
+                            </mat-error>
                             <mat-hint>{{itemFormGroup[i].controls['cost'].value?.sound}}</mat-hint>
                         </mat-form-field>
 
@@ -119,14 +122,14 @@
         <mat-hint>{{reimbursementFormGroup.controls['totalCost'].value?.sound}}</mat-hint>
     </mat-form-field>
 
-    <!-- Submitted Date Field -->
+    <!-- Application Date Field -->
     <mat-form-field appearance="fill" [formGroup]="reimbursementFormGroup"
-        *ngIf="!isAddReimbursement && reimbursementData.approved === 1">
-        <mat-label>Submitted Date</mat-label>
-        <input matInput formControlName="submittedDate" [matDatepicker]="submittedDatePicker" [min]="minDate" required>
-        <mat-datepicker-toggle matSuffix [for]="submittedDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #submittedDatePicker></mat-datepicker>
-        <mat-error *ngIf="reimbursementFormGroup.controls['submittedDate'].hasError('matDatepickerMin')">Cannot input
+        *ngIf="!isAddReimbursement && reimbursementData.status >= 1">
+        <mat-label>Application Date</mat-label>
+        <input matInput formControlName="createdDate" [matDatepicker]="createdDatePicker" [min]="minDate" required>
+        <mat-datepicker-toggle matSuffix [for]="createdDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #createdDatePicker></mat-datepicker>
+        <mat-error *ngIf="reimbursementFormGroup.controls['createdDate'].hasError('matDatepickerMin')">Cannot input
             date
             earlier than
             <strong>today</strong>
@@ -135,7 +138,7 @@
 
     <!-- Approval Date Field -->
     <mat-form-field appearance="fill" [formGroup]="reimbursementFormGroup"
-        *ngIf="!isAddReimbursement && reimbursementData.approved === 1">
+        *ngIf="!isAddReimbursement && reimbursementData.status >= 2">
         <mat-label>Approval Date</mat-label>
         <input matInput formControlName="approvalDate" [matDatepicker]="approvalDatePicker" required>
         <mat-datepicker-toggle matSuffix [for]="approvalDatePicker"></mat-datepicker-toggle>
@@ -144,11 +147,20 @@
 
     <!-- Rejected Date Field -->
     <mat-form-field appearance="fill" [formGroup]="reimbursementFormGroup"
-        *ngIf="!isAddReimbursement && reimbursementData.approved === 0">
+        *ngIf="!isAddReimbursement && reimbursementData.status === 0">
         <mat-label>Rejected Date</mat-label>
         <input matInput formControlName="rejectionDate" [matDatepicker]="rejectionDatePicker" required>
         <mat-datepicker-toggle matSuffix [for]="rejectionDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #rejectionDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Release Date Field -->
+    <mat-form-field appearance="fill" [formGroup]="reimbursementFormGroup"
+        *ngIf="!isAddReimbursement && reimbursementData.status === 3">
+        <mat-label>Release Date</mat-label>
+        <input matInput formControlName="releaseDate" [matDatepicker]="releaseDatePicker" required>
+        <mat-datepicker-toggle matSuffix [for]="releaseDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #releaseDatePicker></mat-datepicker>
     </mat-form-field>
 
     <!-- Remarks Field -->
@@ -159,17 +171,22 @@
 
     <!-- Upload Receipt -->
     <div *ngFor="let imgURL of images">
-        <img [src]="imgURL" height="200">
+        <img class="rct-img" [src]="imgURL" height="200">
     </div>
     <input class="file-input" type="file" accept="image/*" multiple #fileInput
         (change)="previewReceipt(fileInput.files, true)">
-    <button mat-raised-button class="upload-btn" (click)="fileInput.click()">Upload Receipt</button>
+    <button mat-raised-button class="upload-btn" (click)="fileInput.click()"
+        *ngIf="isEditReimbursement || isAddReimbursement">Upload
+        Receipt</button>
 
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button type="submit" color="primary" (click)="onAddClick(fileInput.files)"
-        *ngIf="isAddReimbursement">Add</button>
+        *ngIf="isAddReimbursement">
+        <mat-icon>power_settings_new</mat-icon>Add
+    </button>
     <button mat-raised-button type="submit" color="primary" (click)="onAddClick(fileInput.files)"
-        *ngIf="!isAddReimbursement">Save</button>
-    <button mat-raised-button color="warn" (click)="onCancelClick()" *ngIf="!isAddReimbursement">Cancel Request</button>
+        *ngIf="!isAddReimbursement && isEditReimbursement">Save</button>
+    <button mat-raised-button color="warn" (click)="onCancelClick()"
+        *ngIf="!isAddReimbursement && isEditReimbursement">Cancel Request</button>
 </div>

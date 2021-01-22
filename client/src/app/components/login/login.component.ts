@@ -29,11 +29,11 @@ export class LoginComponent implements OnInit {
       this.loginService.login(this.formGroup.value).subscribe(
         (res) => {
           this.loginService.setLocalStorage(res);
-          this.router.navigate(['api/dashboard']);
+          this.router.navigate(['api/v1/dashboard']);
         },
         (err) => {
           console.log(err);
-          alert(`${err.error.message}\n${err.error.jwt.message}`);
+          alert(err.error.error_message);
         }
       );
     }

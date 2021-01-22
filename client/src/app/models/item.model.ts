@@ -1,4 +1,4 @@
-export class ReimbursementItem {
+export class Item {
   _itemId: number;
   _reimbursementId: number;
   item: string;

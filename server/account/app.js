@@ -35,7 +35,7 @@ accountApp.use(passport.initialize());
 accountApp.use('/api/v1', passport.authenticate('jwt', { session: false }), accountRoute);
 
 accountApp.listen(PORT, () => {
-	console.log(`Dashboard App listening on port ${PORT}`);
+	console.log(`Account App listening on port ${PORT}`);
 });
 
 module.exports = accountApp;

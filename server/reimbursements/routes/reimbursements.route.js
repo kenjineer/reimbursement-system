@@ -4,7 +4,7 @@ const router = express.Router();
 const upload = require('../multer-config');
 const reimbursementsController = require('../controllers/reimbursements.controller');
 
-router.get('/reimbursements', reimbursementsController.getUserReimbursements);
+router.get('/reimbursements/user/:authority', reimbursementsController.getUserReimbursements);
 
 router.get('/reimbursements/:_reimbursementId/items', reimbursementsController.getItems);
 

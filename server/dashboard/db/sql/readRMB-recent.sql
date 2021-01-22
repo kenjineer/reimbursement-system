@@ -16,7 +16,7 @@ FROM
 WHERE
 	RMB._userId = ?
     AND
-    RMB.status = 3
+    NOT RMB.status = 1
     AND
     MONTH(RMB.updatedDate) = MONTH(CURRENT_DATE())
     AND

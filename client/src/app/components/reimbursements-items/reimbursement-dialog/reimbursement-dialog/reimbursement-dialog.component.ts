@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { Receipt } from 'src/app/models/receipt.model';
 import { Reimbursement } from 'src/app/models/reimbursement.model';
-import { ReimbursementItem } from 'src/app/models/reimbursementItem.model';
+import { Item } from 'src/app/models/item.model';
 import { LoginService } from 'src/app/services/login/login.service';
 import { ReimbursementsService } from 'src/app/services/reimbursements/reimbursements.service';
 
@@ -50,7 +50,7 @@ export class ReimbursementDialogComponent implements OnInit {
   reimbursementFormGroup: FormGroup;
   itemFormGroup: FormGroup[];
   reimbursementData: Reimbursement;
-  itemData: ReimbursementItem[] = [];
+  itemData: Item[] = [];
   receiptData: Receipt[];
   categories: Category[];
   requests: Promise<any>[];
@@ -73,7 +73,7 @@ export class ReimbursementDialogComponent implements OnInit {
       this.reimbursementData = data;
       this.isAddReimbursement = false;
     } else {
-      this.itemData.push(new ReimbursementItem(-1));
+      this.itemData.push(new Item(-1));
       this.isAddReimbursement = true;
     }
   }
@@ -87,12 +87,12 @@ export class ReimbursementDialogComponent implements OnInit {
 
       if (this.isAddReimbursement) {
         const [resCategories] = await Promise.all(this.requests);
-        this.categories = resCategories.categories;
+        this.categories = resCategories.rmbCategories;
         return;
       }
 
       this.requests.push(
-        this.reimbursementsService.getReimbursementItems(
+        this.reimbursementsService.getItems(
           this.reimbursementData._reimbursementId
         )
       );
@@ -105,17 +105,18 @@ export class ReimbursementDialogComponent implements OnInit {
         this.requests
       );
 
-      this.categories = resCategories.categories;
-      this.itemData = resItems.reimbursementItems;
-      this.receiptData = resReceipts.receipts;
+      this.categories = resCategories.rmbCategories;
+      this.itemData = resItems.rmbItems;
+      this.receiptData = resReceipts.rmbReceipts;
+
       this.previewReceipt(this.receiptData, false);
 
       this.initForm();
     } catch (err) {
       console.log(err);
-      alert(`${err.error.message}\n${err.error.jwt.message}`);
+      alert(err.error.error_message);
       this.loginService.logout();
-      this.router.navigate(['api/login']);
+      this.router.navigate(['api/v1/login']);
     }
   }
 
@@ -159,13 +160,13 @@ export class ReimbursementDialogComponent implements OnInit {
           { value: this.reimbursementData.plannedDate, disabled: true },
           Validators.required
         ),
-        approved: new FormControl(
-          { value: this.reimbursementData.approved, disabled: true },
+        status: new FormControl(
+          { value: this.reimbursementData.status, disabled: true },
           Validators.required
         ),
-        submittedDate: new FormControl(
+        createdDate: new FormControl(
           {
-            value: this.reimbursementData.submittedDate ?? new Date(),
+            value: this.reimbursementData.createdDate ?? new Date(),
             disabled: true,
           },
           Validators.required
@@ -176,6 +177,10 @@ export class ReimbursementDialogComponent implements OnInit {
         ),
         rejectionDate: new FormControl(
           { value: this.reimbursementData.rejectionDate, disabled: true },
+          Validators.required
+        ),
+        releaseDate: new FormControl(
+          { value: this.reimbursementData.releaseDate, disabled: true },
           Validators.required
         ),
         remarks: new FormControl(
@@ -303,9 +308,7 @@ export class ReimbursementDialogComponent implements OnInit {
   }
 
   addItemClick(): void {
-    let item = new ReimbursementItem(
-      this.reimbursementData?._reimbursementId ?? -1
-    );
+    let item = new Item(this.reimbursementData?._reimbursementId ?? -1);
     this.itemData.push(item);
     this.itemFormGroup.push(
       new FormGroup({
@@ -326,7 +329,7 @@ export class ReimbursementDialogComponent implements OnInit {
     );
   }
 
-  deleteItemClick(item: ReimbursementItem): void {
+  deleteItemClick(item: Item): void {
     if (!item._itemId) {
       this.itemData = this.itemData.filter(
         (i) => i.createdDate !== item.createdDate
@@ -377,7 +380,7 @@ export class ReimbursementDialogComponent implements OnInit {
         },
         (err) => {
           console.log(err);
-          alert(`${err.error.message}\n${err.error.jwt.message}`);
+          alert(err.error.error_message);
         }
       );
     }

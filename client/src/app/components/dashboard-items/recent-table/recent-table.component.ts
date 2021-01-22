@@ -25,8 +25,8 @@ export class RecentTableComponent implements AfterViewInit, OnInit {
     'categoryName',
     'purpose',
     'totalCost',
-    'approved',
-    'submittedDate',
+    'status',
+    'createdDate',
   ];
 
   ngOnInit() {

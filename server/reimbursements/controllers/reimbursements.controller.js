@@ -15,20 +15,20 @@ const URL = `http://localhost:${PORT}`;
 const UPLOAD_DIR = path.join(__dirname, '..', 'assets', 'uploads');
 const CATCH_ERR = { error_message: 'Cannot connect to database / System Error' };
 
-// ROUTE /api/v1/reimbursements
+// ROUTE /api/v1/reimbursements/user/:authority
 // Get and return reimbursements by authority.
 exports.getUserReimbursements = async (req, res) => {
 	const user = getAuthUser();
 	let reimbursements = [];
 
 	try {
-		if (req.body.authority === 0) {
+		if (req.params.authority === '0') {
 			// Accessing Reimbursements as Regular Employee
 			[reimbursements] = await Reimbursement.readReimbursementsEmp(user._userId);
-		} else if (req.body.authority === 1) {
+		} else if (req.params.authority === '1') {
 			// Accessing Reimbursements as Manager
 			[reimbursements] = await Reimbursement.readReimbursementsMgr(user._userId);
-		} else if (req.body.authority === 2) {
+		} else if (req.params.authority === '2') {
 			// Accessing Reimbursements as Finance Officer
 			[reimbursements] = await Reimbursement.readReimbursementsFin(user._userId);
 		}
@@ -146,7 +146,7 @@ exports.postNewReimbursement = async (req, res) => {
 		for (let filename of filenames) {
 			create.push(
 				Receipt.createReceipt(
-					reimbursement[0]._reimbursementId,
+					reimbursement.insertId,
 					'image/' + filename.slice(filename.indexOf('.') + 1),
 					filename,
 					fs.readFileSync(path.join(UPLOAD_DIR, filename))
@@ -162,7 +162,7 @@ exports.postNewReimbursement = async (req, res) => {
 		if (rmuploads.length !== 0) await Promise.all(rmuploads);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send(CATCH_ERR);
@@ -272,7 +272,7 @@ exports.putReimbursement = async (req, res) => {
 		if (rmuploads.length !== 0) await Promise.all(rmuploads);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send(CATCH_ERR);
@@ -281,19 +281,19 @@ exports.putReimbursement = async (req, res) => {
 
 // ROUTE /api/v1/reimbursements/:_reimbursementId
 // Cancel/Delete user reimbursement.
-exports.deleteReimbursements = async (req, res) => {
+exports.deleteReimbursement = async (req, res) => {
 	try {
 		// Delete Reimbursement Receipts by _reimbursementId
-		await Receipt.deleteReimbursementReceipts(req.query._reimbursementIds);
+		await Receipt.deleteReceipts(req.query._reimbursementId);
 
 		// Delete Reimbursement Items by _reimbursementId
-		await ReimbursementItem.deleteReimbursementItems(req.query._reimbursementIds);
+		await ReimbursementItem.deleteItems(req.query._reimbursementId);
 
 		// Delete Reimbursement by _reimbursementId
-		await Reimbursement.deleteReimbursements(req.query._reimbursementIds);
+		await Reimbursement.deleteReimbursement(req.query._reimbursementId);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send(CATCH_ERR);
@@ -308,7 +308,7 @@ exports.deleteItem = async (req, res) => {
 		await ReimbursementItem.deleteItem(req.params._itemId, req.params._reimbursementId);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send(CATCH_ERR);
@@ -323,7 +323,7 @@ exports.deleteReceipt = async (req, res) => {
 		await Receipt.deleteReceipt(req.params._receiptId, req.params._reimbursementId);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send(CATCH_ERR);
@@ -361,7 +361,7 @@ exports.putReimbursementStatus = async (req, res) => {
 		}
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send(CATCH_ERR);

@@ -25,8 +25,8 @@ module.exports = class Receipt {
 		return db.execute(receipt, [_receiptId, _reimbursementId]);
 	}
 
-	static deleteReceipts(_reimbursementIds) {
+	static deleteReceipts(_reimbursementId) {
 		const receipt = fs.readFileSync(deleteReceipts).toString();
-		return db.execute(receipt, [_reimbursementIds]);
+		return db.execute(receipt, [_reimbursementId]);
 	}
 };

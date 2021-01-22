@@ -9,16 +9,16 @@ import { baseUrls } from 'src/environments/environment';
 export class ReimbursementsService {
   constructor(private http: HttpClient) {}
 
-  getUserReimbursements(): Promise<any> {
+  getUserReimbursements(authority): Promise<any> {
     return this.http
-      .get(`${baseUrls.reimbursements}/reimbursements`)
+      .get(`${baseUrls.reimbursements}/reimbursements/user/${authority}`)
       .toPromise();
   }
 
-  getReimbursementItems(_reimbursementId: number): Promise<any> {
+  getItems(_reimbursementId: number): Promise<any> {
     return this.http
       .get(
-        `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}/reimbursement-items`
+        `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}/items`
       )
       .toPromise();
   }
@@ -39,25 +39,21 @@ export class ReimbursementsService {
 
   postNewReimbursement(data: FormData): Observable<any> {
     return this.http.post(
-      `${baseUrls.reimbursements}/reimbursements/new-reimbursement`,
+      `${baseUrls.reimbursements}/reimbursements/new`,
       data
     );
   }
 
   putReimbursement(_reimbursementId: number, data: FormData): Observable<any> {
     return this.http.put(
-      `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}/edit-reimbursement`,
+      `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}`,
       data
     );
   }
 
-  deleteReimbursements(_reimbursementIds: number[]): Observable<any> {
-    let url;
-    for (let _reimbursementId of _reimbursementIds) {
-      url += `_reimbursementId=${_reimbursementId}&`;
-    }
+  deleteReimbursements(_reimbursementId: number): Observable<any> {
     return this.http.delete(
-      `${baseUrls.reimbursements}/reimbursements/delete-reimbursement?${url}`
+      `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}`
     );
   }
 }

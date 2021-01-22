@@ -111,9 +111,9 @@ exports.postRejectionEmail = async (req, res) => {
 	}
 };
 
-// ROUTE /api/v1/email/rejection/:_reimbursementId
+// ROUTE /api/v1/email/release/:_reimbursementId
 // Send reimbursement release email to employee.
-exports.postRejectionEmail = async (req, res) => {
+exports.postReleaseEmail = async (req, res) => {
 	// Get Manager information
 	const finOfficer = getAuthUser();
 

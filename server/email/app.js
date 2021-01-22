@@ -41,7 +41,7 @@ emailApp.set('views', 'templates');
 emailApp.use('/api/v1', passport.authenticate('jwt', { session: false }), emailRoute);
 
 emailApp.listen(PORT, () => {
-	console.log(`Dashboard App listening on port ${PORT}`);
+	console.log(`Email App listening on port ${PORT}`);
 });
 
 module.exports = emailApp;

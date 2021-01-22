@@ -7,20 +7,15 @@ import { Observable, of as observableOf, merge } from 'rxjs';
 // TODO: Replace this with your own data model type
 export interface RecentTableItem {
   _reimbursementId: number;
-  _userId: bigint;
-  employeeName: string;
-  _managerId: bigint;
-  managerName: string;
   categoryName: string;
   purpose: string;
   totalCost: number;
   plannedDate: Date;
-  approved: number;
-  submittedDate: Date;
+  status: number;
   approvalDate: Date;
   rejectionDate: Date;
+  releaseDate: Date;
   createdDate: Date;
-  updatedDate: Date;
 }
 
 /**
@@ -88,14 +83,6 @@ export class RecentTableDataSource extends DataSource<RecentTableItem> {
       switch (this.sort.active) {
         case '_reimbursementId':
           return compare(+a._reimbursementId, +b._reimbursementId, isAsc);
-        case '_userId':
-          return compare(a._userId, b._userId, isAsc);
-        case 'employeeName':
-          return compare(a.employeeName, b.employeeName, isAsc);
-        case '_managerId':
-          return compare(a._managerId, b._managerId, isAsc);
-        case 'managerName':
-          return compare(a.managerName, b.managerName, isAsc);
         case 'categoryName':
           return compare(a.categoryName, b.categoryName, isAsc);
         case 'purpose':
@@ -104,18 +91,16 @@ export class RecentTableDataSource extends DataSource<RecentTableItem> {
           return compare(a.totalCost, b.totalCost, isAsc);
         case 'plannedDate':
           return compare(a.plannedDate, b.plannedDate, isAsc);
-        case 'approved':
-          return compare(a.approved, b.approved, isAsc);
-        case 'submittedDate':
-          return compare(a.submittedDate, b.submittedDate, isAsc);
+        case 'status':
+          return compare(a.status, b.status, isAsc);
         case 'approvalDate':
           return compare(a.approvalDate, b.approvalDate, isAsc);
         case 'rejectionDate':
           return compare(a.rejectionDate, b.rejectionDate, isAsc);
+        case 'releaseDate':
+          return compare(a.releaseDate, b.releaseDate, isAsc);
         case 'createdDate':
           return compare(a.createdDate, b.createdDate, isAsc);
-        case 'updatedDate':
-          return compare(a.updatedDate, b.updatedDate, isAsc);
         default:
           return 0;
       }
@@ -125,8 +110,8 @@ export class RecentTableDataSource extends DataSource<RecentTableItem> {
 
 /** Simple sort comparator for example ID/Name columns (for client-side sorting). */
 function compare(
-  a: string | number | bigint | Date,
-  b: string | number | bigint | Date,
+  a: string | number | Date,
+  b: string | number | Date,
   isAsc: boolean
 ) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

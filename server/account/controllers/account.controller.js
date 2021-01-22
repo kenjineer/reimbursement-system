@@ -26,9 +26,9 @@ exports.getUserAccount = async (req, res) => {
 
 // ROUTE /api/v1/account/
 // Get and update user account information.
-exports.getUserAccount = async (req, res) => {
+exports.putUserAccount = async (req, res) => {
 	// Get logged-in _userId
-	const user = getAuthUser();
+	const _userId = getAuthUser();
 
 	try {
 		// Get user information
@@ -45,7 +45,7 @@ exports.getUserAccount = async (req, res) => {
 		}
 
 		// Update User by _userId
-		const [user] = await User.updateUser(user[0]);
+		await User.updateUser(user[0]);
 
 		// Return acknowledgement response
 		return res.sendStatus(200);

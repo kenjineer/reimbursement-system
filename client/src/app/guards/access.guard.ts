@@ -26,9 +26,10 @@ export class AccessGuard implements CanActivate {
     if ((requiredLogin && isLoggedIn) || (requiredLogout && isLoggedOut)) {
       return true;
     } else if (requiredLogin && !isLoggedIn) {
-      this.router.navigate(['api/login']);
+      alert('Session expired! Please re-login your account.');
+      this.router.navigate(['api/v1/login']);
     } else {
-      this.router.navigate(['api/dashboard']);
+      this.router.navigate(['api/v1/dashboard']);
       return false;
     }
   }

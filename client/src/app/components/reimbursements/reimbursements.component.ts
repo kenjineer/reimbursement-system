@@ -29,6 +29,7 @@ export class ReimbursementsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<ReimbursementsItem>;
+  static empAuthority: number = 0;
   dataSource: ReimbursementsDataSource;
   data: ReimbursementsItem[];
   reimbursements: Reimbursement[];
@@ -39,21 +40,23 @@ export class ReimbursementsComponent implements AfterViewInit {
     'categoryName',
     'purpose',
     'totalCost',
-    'approved',
-    'submittedDate',
+    'status',
+    'createdDate',
   ];
 
   async ngAfterViewInit() {
     try {
-      const res = await this.reimbursementsService.getUserReimbursements();
+      const res = await this.reimbursementsService.getUserReimbursements(
+        ReimbursementsComponent.empAuthority
+      );
       this.reimbursements = res.reimbursements;
       this.data = res.reimbursements;
       this.dataSource = new ReimbursementsDataSource(this.data);
     } catch (err) {
       console.log(err);
-      alert(`${err.error.message}\n${err.error.jwt.message}`);
+      alert(err.error.error_message);
       this.loginService.logout();
-      this.router.navigate(['api/login']);
+      this.router.navigate(['api/v1/login']);
     }
 
     this.dataSource.sort = this.sort;

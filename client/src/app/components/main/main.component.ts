@@ -12,14 +12,14 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {}
 
   isDashboardRoute() {
-    return this.router.url === '/api/dashboard';
+    return this.router.url === '/api/v1/dashboard';
   }
 
   isReimbursementsRoute() {
-    return this.router.url === '/api/reimbursements';
+    return this.router.url === '/api/v1/reimbursements';
   }
 
   isAccountRoute() {
-    return this.router.url === '/api/account';
+    return this.router.url === '/api/v1/account';
   }
 }

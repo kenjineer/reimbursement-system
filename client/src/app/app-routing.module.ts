@@ -6,32 +6,32 @@ import { MainComponent } from './components/main/main.component';
 import { AccessGuard } from './guards/access.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'api/login', pathMatch: 'full' },
+  { path: '', redirectTo: 'api/v1/login', pathMatch: 'full' },
   {
-    path: 'api/login',
+    path: 'api/v1/login',
     component: LoginComponent,
     data: { requiredLogout: true },
     canActivate: [AccessGuard],
   },
   {
-    path: 'api/dashboard',
+    path: 'api/v1/dashboard',
     component: MainComponent,
     data: { requiredLogin: true },
     canActivate: [AccessGuard],
   },
   {
-    path: 'api/reimbursements',
+    path: 'api/v1/reimbursements',
     component: MainComponent,
     data: { requiredLogin: true },
     canActivate: [AccessGuard],
   },
   {
-    path: 'api/account',
+    path: 'api/v1/account',
     component: MainComponent,
     data: { requiredLogin: true },
     canActivate: [AccessGuard],
   },
-  { path: '**', redirectTo: 'api/login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'api/v1/login', pathMatch: 'full' },
 ];
 
 @NgModule({
