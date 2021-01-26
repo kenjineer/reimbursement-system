@@ -41,7 +41,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { LogoutDialogComponent } from './components/logout-dialog/logout-dialog.component';
+import { ReusableDialogComponent } from './components/reusable-dialog/reusable-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +56,7 @@ import { LogoutDialogComponent } from './components/logout-dialog/logout-dialog.
     RecentTableComponent,
     CategoryChartComponent,
     ReimbursementDialogComponent,
-    LogoutDialogComponent,
+    ReusableDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -96,6 +96,7 @@ import { LogoutDialogComponent } from './components/logout-dialog/logout-dialog.
       multi: true,
     },
     AccessGuard,
+    ReusableDialogComponent,
   ],
   bootstrap: [AppComponent],
 })

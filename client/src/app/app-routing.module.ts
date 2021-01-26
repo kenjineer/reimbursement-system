@@ -26,6 +26,24 @@ const routes: Routes = [
     canActivate: [AccessGuard],
   },
   {
+    path: 'api/v1/manage',
+    component: MainComponent,
+    data: {
+      requiredLogin: true,
+      access: 'manager',
+    },
+    canActivate: [AccessGuard],
+  },
+  {
+    path: 'api/v1/finance',
+    component: MainComponent,
+    data: {
+      requiredLogin: true,
+      access: 'finance',
+    },
+    canActivate: [AccessGuard],
+  },
+  {
     path: 'api/v1/account',
     component: MainComponent,
     data: { requiredLogin: true },

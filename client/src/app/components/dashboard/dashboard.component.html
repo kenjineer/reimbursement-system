@@ -11,7 +11,7 @@
 
           <div *ngIf="card.title == 'Profile'">
 
-            <img class="profile-icon" src="../../../assets/img\ACTION - Kenneth Karamihan.png" alt="">
+            <img class="profile-icon" src="../../../assets/img\temporary-profile-placeholder.jpg" alt="">
 
             <div class="user-info">
               <h1>{{user.firstname}} {{user.middlename}} {{user.lastname}}</h1>
@@ -24,11 +24,16 @@
                 <div class="btn-flex-container">
                   <div class="btn-container">
                     <button mat-fab color="primary">
-                      {{totalReimbursements || 0}}
+                      {{totalReimbursements + pendingReimbursements.length + totalRejected || 0}}
                     </button>
                   </div>
                   <div class="btn-container">
                     <button mat-fab color="accent">
+                      {{totalReimbursements || 0}}
+                    </button>
+                  </div>
+                  <div class="btn-container">
+                    <button mat-fab color="white">
                       {{pendingReimbursements.length || 0}}
                     </button>
                   </div>
@@ -44,6 +49,9 @@
                 <div class="btn-flex-container">
                   <div class="btn-container">
                     Total
+                  </div>
+                  <div class="btn-container">
+                    Approved
                   </div>
                   <div class="btn-container">
                     Pending

@@ -51,7 +51,7 @@ export class ReimbursementsService {
     );
   }
 
-  deleteReimbursements(_reimbursementId: number): Observable<any> {
+  deleteReimbursement(_reimbursementId: number): Observable<any> {
     return this.http.delete(
       `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}`
     );

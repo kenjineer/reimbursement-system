@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogoutDialogComponent } from './logout-dialog.component';
+import { ReusableDialogComponent } from './reusable-dialog.component';
 
 describe('LogoutDialogComponent', () => {
-  let component: LogoutDialogComponent;
-  let fixture: ComponentFixture<LogoutDialogComponent>;
+  let component: ReusableDialogComponent;
+  let fixture: ComponentFixture<ReusableDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [ReusableDialogComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogoutDialogComponent);
+    fixture = TestBed.createComponent(ReusableDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

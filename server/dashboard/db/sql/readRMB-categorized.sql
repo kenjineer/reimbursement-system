@@ -8,6 +8,6 @@ FROM
 WHERE
 	RMB._userId = ?
     AND
-    RMB.status = 3
+    RMB.status > 1
 GROUP BY
     CTG.categoryName;

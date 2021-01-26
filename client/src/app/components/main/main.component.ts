@@ -19,6 +19,14 @@ export class MainComponent implements OnInit {
     return this.router.url === '/api/v1/reimbursements';
   }
 
+  isManageRoute() {
+    return this.router.url === '/api/v1/manage';
+  }
+
+  isFinanceRoute() {
+    return this.router.url === '/api/v1/finance';
+  }
+
   isAccountRoute() {
     return this.router.url === '/api/v1/account';
   }

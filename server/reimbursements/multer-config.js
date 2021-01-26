@@ -15,7 +15,7 @@ const imageFilter = (req, file, cb) => {
 const storage = multer.diskStorage({
 	destination: uploadDir,
 	filename: (req, file, cb) => {
-		cb(null, `${Date.now()}_arsys_${file.originalname}`);
+		cb(null, `${Date.now()}_rtsph_${file.originalname}`);
 	},
 	limits: {
 		fileSize: 8000000,

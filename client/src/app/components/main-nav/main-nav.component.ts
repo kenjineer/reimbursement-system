@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { LoginService } from 'src/app/services/login/login.service';
 import { Router } from '@angular/router';
-import { LogoutDialogComponent } from '../logout-dialog/logout-dialog.component';
+import { ReusableDialogComponent } from '../reusable-dialog/reusable-dialog.component';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-main-nav',
@@ -24,15 +25,14 @@ export class MainNavComponent {
     private breakpointObserver: BreakpointObserver,
     private loginService: LoginService,
     private router: Router,
-    private logoutDialog: MatDialog
+    private reusableDialog: MatDialog
   ) {}
 
   openLogoutDialog() {
-    const logoutDialogRef = this.logoutDialog.open(LogoutDialogComponent);
+    ReusableDialogComponent.componentFlag = 'Logout';
+    const logoutDialogRef = this.reusableDialog.open(ReusableDialogComponent);
     logoutDialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
       if (result == true) {
-        console.log(result);
         this.loginService.logout();
         this.router.navigate(['api/v1/login']);
       }
@@ -43,11 +43,19 @@ export class MainNavComponent {
     this.openLogoutDialog();
   }
 
+  getAuthority() {
+    return localStorage.getItem('auth');
+  }
+
   activeRouteTitle() {
     if (this.router.url === '/api/v1/dashboard') {
       return 'Dashboard';
     } else if (this.router.url === '/api/v1/reimbursements') {
       return 'Reimbursements';
+    } else if (this.router.url === '/api/v1/manage') {
+      return 'Manage';
+    } else if (this.router.url === '/api/v1/finance') {
+      return 'Finance';
     } else if (this.router.url === '/api/v1/account') {
       return 'Account';
     }

@@ -8,12 +8,12 @@ import {
   PendingReimbursement,
   RecentReimbursement,
 } from 'src/app/models/reimbursement.model';
-import { Router } from '@angular/router';
-import { LoginService } from 'src/app/services/login/login.service';
 import { Observable } from 'rxjs';
 import { PendingTableComponent } from '../dashboard-items/pending-table/pending-table.component';
 import { RecentTableComponent } from '../dashboard-items/recent-table/recent-table.component';
 import { CategoryChartComponent } from '../dashboard-items/category-chart/category-chart.component';
+import { ReusableDialogComponent } from '../reusable-dialog/reusable-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,8 +24,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private dashboardService: DashboardService,
-    private router: Router,
-    private loginService: LoginService
+    private reusableDialogComponent: ReusableDialogComponent,
+    private reusableDialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -90,7 +90,10 @@ export class DashboardComponent implements OnInit {
       },
       (err) => {
         console.log(err);
-        alert(err.error.message);
+        this.reusableDialogComponent.openErrorDialog(
+          err.error?.error_message ?? err.statusText,
+          this.reusableDialog
+        );
       }
     );
   }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login/login.service';
+import { ReusableDialogComponent } from '../reusable-dialog/reusable-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,12 @@ import { LoginService } from 'src/app/services/login/login.service';
 export class LoginComponent implements OnInit {
   formGroup: FormGroup;
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private reusableDialogComponent: ReusableDialogComponent,
+    private reusableDialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -33,8 +40,17 @@ export class LoginComponent implements OnInit {
         },
         (err) => {
           console.log(err);
-          alert(err.error.error_message);
+          this.reusableDialogComponent.openErrorDialog(
+            err.error?.jwt.error_message ?? err.statusText,
+            this.reusableDialog
+          );
         }
+      );
+    } else {
+      this.formGroup.markAllAsTouched();
+      this.reusableDialogComponent.openErrorDialog(
+        'Please input your username and password.',
+        this.reusableDialog
       );
     }
   }

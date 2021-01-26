@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -12,27 +12,31 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ReimbursementDialogComponent } from '../reimbursements-items/reimbursement-dialog/reimbursement-dialog/reimbursement-dialog.component';
 import { Reimbursement } from 'src/app/models/reimbursement.model';
+import { ReusableDialogComponent } from '../reusable-dialog/reusable-dialog.component';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-reimbursements',
   templateUrl: './reimbursements.component.html',
   styleUrls: ['./reimbursements.component.css'],
 })
-export class ReimbursementsComponent implements AfterViewInit {
+export class ReimbursementsComponent implements AfterContentInit {
   constructor(
     private router: Router,
     private reimbursementsService: ReimbursementsService,
     private loginService: LoginService,
-    public reimbursementDialog: MatDialog
+    public reimbursementDialog: MatDialog,
+    private reusableDialogComponent: ReusableDialogComponent,
+    private reusableDialog: MatDialog
   ) {}
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<ReimbursementsItem>;
-  static empAuthority: number = 0;
   dataSource: ReimbursementsDataSource;
   data: ReimbursementsItem[];
   reimbursements: Reimbursement[];
+  authLevel: number;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
@@ -44,17 +48,34 @@ export class ReimbursementsComponent implements AfterViewInit {
     'createdDate',
   ];
 
-  async ngAfterViewInit() {
+  async ngAfterContentInit() {
     try {
+      if (
+        this.router.url === '/api/v1/manage' &&
+        localStorage.getItem('auth') === '1'
+      ) {
+        this.authLevel = 1;
+      } else if (
+        this.router.url === '/api/v1/finance' &&
+        localStorage.getItem('auth') === '2'
+      ) {
+        this.authLevel = 2;
+      } else {
+        this.authLevel = 0;
+      }
+
       const res = await this.reimbursementsService.getUserReimbursements(
-        ReimbursementsComponent.empAuthority
+        this.authLevel
       );
       this.reimbursements = res.reimbursements;
       this.data = res.reimbursements;
       this.dataSource = new ReimbursementsDataSource(this.data);
     } catch (err) {
       console.log(err);
-      alert(err.error.error_message);
+      this.reusableDialogComponent.openErrorDialog(
+        err.error?.error_message ?? err.statusText,
+        this.reusableDialog
+      );
       this.loginService.logout();
       this.router.navigate(['api/v1/login']);
     }
@@ -70,14 +91,17 @@ export class ReimbursementsComponent implements AfterViewInit {
       {
         width: '800px',
         height: '900px',
-        data: this.reimbursements.find(
-          (data) => data._reimbursementId === _reimbursementId
-        ),
+        data: {
+          reimbursement: this.reimbursements.find(
+            (data) => data._reimbursementId === _reimbursementId
+          ),
+          auth: this.authLevel,
+        },
       }
     );
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+      this.ngAfterContentInit();
     });
   }
 
@@ -92,7 +116,7 @@ export class ReimbursementsComponent implements AfterViewInit {
     );
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.ngAfterViewInit();
+      this.ngAfterContentInit();
     });
   }
 }

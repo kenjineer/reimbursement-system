@@ -25,12 +25,15 @@ exports.getUserReimbursements = async (req, res) => {
 		if (req.params.authority === '0') {
 			// Accessing Reimbursements as Regular Employee
 			[reimbursements] = await Reimbursement.readReimbursementsEmp(user._userId);
-		} else if (req.params.authority === '1') {
+		} else if (req.params.authority === '1' && req.params.authority >= user.authority) {
 			// Accessing Reimbursements as Manager
 			[reimbursements] = await Reimbursement.readReimbursementsMgr(user._userId);
-		} else if (req.params.authority === '2') {
+		} else if (req.params.authority === '2' && req.params.authority == user.authority) {
 			// Accessing Reimbursements as Finance Officer
 			[reimbursements] = await Reimbursement.readReimbursementsFin(user._userId);
+		} else {
+			// Authority Level Not Recognized
+			return res.status(401).send();
 		}
 
 		// Response object
@@ -188,7 +191,6 @@ exports.putReimbursement = async (req, res) => {
 				data.updatedReimbursement.purpose,
 				data.updatedReimbursement.totalCost,
 				data.updatedReimbursement.plannedDate,
-				data.updatedReimbursement.submittedDate,
 				data.updatedReimbursement.remarks,
 				_reimbursementId,
 				user._userId
@@ -284,13 +286,13 @@ exports.putReimbursement = async (req, res) => {
 exports.deleteReimbursement = async (req, res) => {
 	try {
 		// Delete Reimbursement Receipts by _reimbursementId
-		await Receipt.deleteReceipts(req.query._reimbursementId);
+		await Receipt.deleteReceipts(req.params._reimbursementId);
 
 		// Delete Reimbursement Items by _reimbursementId
-		await ReimbursementItem.deleteItems(req.query._reimbursementId);
+		await ReimbursementItem.deleteItems(req.params._reimbursementId);
 
 		// Delete Reimbursement by _reimbursementId
-		await Reimbursement.deleteReimbursement(req.query._reimbursementId);
+		await Reimbursement.deleteReimbursement(req.params._reimbursementId);
 
 		// Return acknowledgement response
 		return res.status(200).send();

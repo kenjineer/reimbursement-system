@@ -50,6 +50,7 @@ exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmai
 
 const issueJwt = (user) => {
 	const _userId = user._userId;
+	const auth = user.authority;
 	const expiryNum = 8;
 	const datetimeType = 'h';
 	const expiresIn = `${expiryNum}${datetimeType}`;
@@ -70,5 +71,6 @@ const issueJwt = (user) => {
 		token: `Bearer ${signedToken}`,
 		expiryNum: expiryNum,
 		datetimeType: datetimeType,
+		auth: auth,
 	};
 };

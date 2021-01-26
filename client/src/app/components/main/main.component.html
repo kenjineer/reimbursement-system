@@ -2,7 +2,7 @@
     <div *ngIf="isDashboardRoute()">
         <app-dashboard></app-dashboard>
     </div>
-    <div *ngIf="isReimbursementsRoute()">
+    <div *ngIf="isReimbursementsRoute() || isManageRoute() || isFinanceRoute()">
         <app-reimbursements></app-reimbursements>
     </div>
     <div *ngIf="isAccountRoute()">

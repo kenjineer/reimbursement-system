@@ -56,7 +56,6 @@ module.exports = class Reimbursement {
 		purpose,
 		totalCost,
 		plannedDate,
-		submittedDate,
 		remarks,
 		_reimbursementId,
 		_userId
@@ -67,7 +66,6 @@ module.exports = class Reimbursement {
 			purpose,
 			totalCost,
 			plannedDate,
-			submittedDate,
 			remarks,
 			_reimbursementId,
 			_userId,

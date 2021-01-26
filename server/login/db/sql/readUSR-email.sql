@@ -1,6 +1,7 @@
 SELECT
     _userId,
-    password
+    password,
+    authority
 FROM
     users
 WHERE

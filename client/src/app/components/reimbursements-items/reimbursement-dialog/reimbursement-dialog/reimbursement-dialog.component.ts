@@ -6,7 +6,11 @@ import {
   MAT_DATE_FORMATS,
 } from '@angular/material/core';
 import { DatePipe, formatDate } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { Receipt } from 'src/app/models/receipt.model';
@@ -14,6 +18,7 @@ import { Reimbursement } from 'src/app/models/reimbursement.model';
 import { Item } from 'src/app/models/item.model';
 import { LoginService } from 'src/app/services/login/login.service';
 import { ReimbursementsService } from 'src/app/services/reimbursements/reimbursements.service';
+import { ReusableDialogComponent } from 'src/app/components/reusable-dialog/reusable-dialog.component';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { month: 'short', year: 'numeric', day: 'numeric' } },
@@ -47,41 +52,61 @@ class PickDateAdapter extends NativeDateAdapter {
   ],
 })
 export class ReimbursementDialogComponent implements OnInit {
+  // Form Control Groups
   reimbursementFormGroup: FormGroup;
   itemFormGroup: FormGroup[];
+
+  // Fetched Data
   reimbursementData: Reimbursement;
   itemData: Item[] = [];
   receiptData: Receipt[];
   categories: Category[];
+  authLevel: number;
+
+  // Promise array
   requests: Promise<any>[];
+
+  // Action Flags
   isAddReimbursement: Boolean;
   isEditReimbursement: Boolean;
+
+  // Set Minimum Date: Today
   minDate: Date = new Date();
-  imagePath;
-  images: any[] = [];
-  message: string;
+
+  // Image arrays
+  uploadedImages: any[] = [];
+  imageURLs: any[] = [];
+  storedImages: Receipt[] = [];
+  deletedImages: any[] = [];
+
+  // Item arrays
+  newItems: any[] = [];
+  deletedItems: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ReimbursementDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Reimbursement,
+    @Inject(MAT_DIALOG_DATA) public data,
     private reimbursementsService: ReimbursementsService,
     private loginService: LoginService,
     private router: Router,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private reusableDialogComponent: ReusableDialogComponent,
+    private reusableDialog: MatDialog
   ) {
     if (data) {
-      this.reimbursementData = data;
+      this.reimbursementData = data.reimbursement;
       this.isAddReimbursement = false;
     } else {
       this.itemData.push(new Item(-1));
       this.isAddReimbursement = true;
     }
+
+    this.authLevel = data.auth;
   }
 
   async ngOnInit() {
     try {
       this.initForm();
-
       this.requests = [];
       this.requests.push(this.reimbursementsService.getCategories());
 
@@ -114,7 +139,10 @@ export class ReimbursementDialogComponent implements OnInit {
       this.initForm();
     } catch (err) {
       console.log(err);
-      alert(err.error.error_message);
+      this.reusableDialogComponent.openErrorDialog(
+        err.error?.error_message ?? err.statusText,
+        this.reusableDialog
+      );
       this.loginService.logout();
       this.router.navigate(['api/v1/login']);
     }
@@ -130,7 +158,7 @@ export class ReimbursementDialogComponent implements OnInit {
           Validators.required
         ),
         plannedDate: new FormControl('', Validators.required),
-        remarks: new FormControl('', Validators.required),
+        remarks: new FormControl(''),
       });
 
       this.itemFormGroup = [];
@@ -138,8 +166,11 @@ export class ReimbursementDialogComponent implements OnInit {
         new FormGroup({
           _itemId: new FormControl(-1),
           item: new FormControl('', Validators.required),
-          qty: new FormControl(0, Validators.required),
-          cost: new FormControl((0).toFixed(2), Validators.required),
+          qty: new FormControl(0, [Validators.required, Validators.min(0)]),
+          cost: new FormControl((0).toFixed(2), [
+            Validators.required,
+            Validators.min(0),
+          ]),
         })
       );
     } else {
@@ -171,51 +202,41 @@ export class ReimbursementDialogComponent implements OnInit {
           },
           Validators.required
         ),
-        approvalDate: new FormControl(
-          { value: this.reimbursementData.approvalDate, disabled: true },
-          Validators.required
-        ),
-        rejectionDate: new FormControl(
-          { value: this.reimbursementData.rejectionDate, disabled: true },
-          Validators.required
-        ),
-        releaseDate: new FormControl(
-          { value: this.reimbursementData.releaseDate, disabled: true },
-          Validators.required
-        ),
-        remarks: new FormControl(
-          { value: this.reimbursementData.remarks, disabled: true },
-          Validators.required
-        ),
+        approvalDate: new FormControl({
+          value: this.reimbursementData.approvalDate,
+          disabled: true,
+        }),
+        rejectionDate: new FormControl({
+          value: this.reimbursementData.rejectionDate,
+          disabled: true,
+        }),
+        releaseDate: new FormControl({
+          value: this.reimbursementData.releaseDate,
+          disabled: true,
+        }),
+        remarks: new FormControl({
+          value: this.reimbursementData.remarks,
+          disabled: true,
+        }),
       });
 
       this.itemFormGroup = [];
-      if (this.itemData.length === 0) {
-        this.itemFormGroup.push(
-          new FormGroup({
-            _itemId: new FormControl(-1),
-            item: new FormControl('', Validators.required),
-            qty: new FormControl('', Validators.required),
-            cost: new FormControl('', Validators.required),
-          })
-        );
-      }
       for (let item of this.itemData) {
         this.itemFormGroup.push(
           new FormGroup({
-            __itemIdid: new FormControl(item._itemId),
+            _itemId: new FormControl(item._itemId),
             item: new FormControl(
               { value: item.item, disabled: true },
               Validators.required
             ),
-            qty: new FormControl(
-              { value: item.qty, disabled: true },
-              Validators.required
-            ),
-            cost: new FormControl(
-              { value: item.cost, disabled: true },
-              Validators.required
-            ),
+            qty: new FormControl({ value: item.qty, disabled: true }, [
+              Validators.required,
+              Validators.min(0),
+            ]),
+            cost: new FormControl({ value: item.cost, disabled: true }, [
+              Validators.required,
+              Validators.min(0),
+            ]),
           })
         );
       }
@@ -236,6 +257,9 @@ export class ReimbursementDialogComponent implements OnInit {
     }
 
     this.reimbursementFormGroup.controls['totalCost'].disable();
+    this.reimbursementFormGroup.controls['createdDate'].disable();
+    this.reimbursementFormGroup.controls['approvalDate'].disable();
+    this.reimbursementFormGroup.controls['rejectionDate'].disable();
   }
 
   formatMoney(e, i: number) {
@@ -275,21 +299,26 @@ export class ReimbursementDialogComponent implements OnInit {
     if (upload) {
       var mimeType = files[0].type;
       if (mimeType.match(/image\/*/) == null) {
-        this.message = 'Only images are supported.';
+        this.reusableDialogComponent.openErrorDialog(
+          'Only images are supported.',
+          this.reusableDialog
+        );
         return;
       }
 
-      this.imagePath = files;
+      this.uploadedImages = this.uploadedImages.concat(Array.from(files));
+
       for (let file of files) {
         let reader = (readers[cnt] = new FileReader());
-        console.log(reader);
         reader.readAsDataURL(file);
         reader.onload = (_event) => {
-          this.images.push(reader.result);
+          this.imageURLs.push(reader.result);
         };
         cnt++;
       }
     } else {
+      this.storedImages = Array.from(files);
+
       for (let file of files) {
         let bytes = new Uint8Array(file.image.data.length);
         for (let i = 0; i < file.image.data.length; i++) {
@@ -300,16 +329,35 @@ export class ReimbursementDialogComponent implements OnInit {
         let reader = (readers[cnt] = new FileReader());
         reader.readAsDataURL(blob);
         reader.onload = (_event) => {
-          this.images.push(reader.result);
+          this.imageURLs.push(reader.result);
         };
         cnt++;
       }
     }
   }
 
+  openImageDialogClick(imgURL) {
+    ReusableDialogComponent.componentFlag = 'Reimbursement Receipt';
+    ReusableDialogComponent.imageURL = imgURL;
+    this.reusableDialog.open(ReusableDialogComponent);
+  }
+
+  deleteImageClick(imgURL, index) {
+    this.imageURLs = this.imageURLs.filter((img) => img !== imgURL);
+    if (index <= this.storedImages.length - 1) {
+      this.deletedImages.push(
+        this.storedImages.splice(index - this.uploadedImages.length, 1)[0]
+          ._receiptId
+      );
+    } else {
+      this.uploadedImages.splice(index, 1);
+    }
+  }
+
   addItemClick(): void {
     let item = new Item(this.reimbursementData?._reimbursementId ?? -1);
     this.itemData.push(item);
+    this.newItems.push(-this.itemFormGroup.length - 1);
     this.itemFormGroup.push(
       new FormGroup({
         _id: new FormControl(-this.itemFormGroup.length - 1),
@@ -329,31 +377,28 @@ export class ReimbursementDialogComponent implements OnInit {
     );
   }
 
-  deleteItemClick(item: Item): void {
+  deleteItemClick(item: Item, index: number): void {
     if (!item._itemId) {
       this.itemData = this.itemData.filter(
         (i) => i.createdDate !== item.createdDate
       );
-      this.itemFormGroup = this.itemFormGroup.filter(
-        (i) =>
-          Number.parseInt(i.controls['_itemId'].value) !==
-          -this.itemFormGroup.length
-      );
-      console.log(this.itemFormGroup, -this.itemFormGroup.length);
+
+      this.itemFormGroup.splice(index, 1);
     } else {
+      this.deletedItems.push(item._itemId);
       this.itemData = this.itemData.filter((i) => i._itemId !== item._itemId);
       this.itemFormGroup = this.itemFormGroup.filter(
-        (i) => Number.parseInt(i.controls['_itemId'].value) !== item._itemId
+        (i) => Number.parseInt(i.controls['_itemId']?.value) !== item._itemId
       );
     }
   }
 
-  onAddClick(files): void {
+  onAddClick(): void {
     if (this.reimbursementFormGroup.valid) {
       const reimbursementInfo = this.reimbursementFormGroup.getRawValue();
       reimbursementInfo.plannedDate = this.datePipe.transform(
         reimbursementInfo.plannedDate,
-        'yyyy-MM-dd hh:mm:ss'
+        'yyyy-MM-dd'
       );
       const newReimbursementData = {
         newReimbursement: reimbursementInfo,
@@ -362,6 +407,10 @@ export class ReimbursementDialogComponent implements OnInit {
 
       for (let item of this.itemFormGroup) {
         if (!item.valid) {
+          this.reusableDialogComponent.openErrorDialog(
+            'There seems to be a problem with your input fields. Please provide the necessary information.',
+            this.reusableDialog
+          );
           return;
         } else {
           newReimbursementData.newItems.push(item.getRawValue());
@@ -371,17 +420,126 @@ export class ReimbursementDialogComponent implements OnInit {
       const data = new FormData();
       data.set('data', JSON.stringify(newReimbursementData));
 
-      for (let file of files) {
+      for (let file of this.uploadedImages) {
         data.append('files', file, file.name);
       }
       this.reimbursementsService.postNewReimbursement(data).subscribe(
         (res) => {
+          this.reusableDialogComponent.openSuccessDialog(
+            'Reimbursement successfully added.',
+            this.reusableDialog
+          );
           this.dialogRef.close();
         },
         (err) => {
           console.log(err);
-          alert(err.error.error_message);
+          this.reimbursementFormGroup.markAllAsTouched();
+          for (let item of this.itemFormGroup) {
+            item.markAllAsTouched();
+          }
+          this.reusableDialogComponent.openErrorDialog(
+            err.error?.error_message ?? err.statusText,
+            this.reusableDialog
+          );
         }
+      );
+    } else {
+      this.reimbursementFormGroup.markAllAsTouched();
+      for (let item of this.itemFormGroup) {
+        item.markAllAsTouched();
+      }
+      this.reusableDialogComponent.openErrorDialog(
+        'There seems to be a problem with your input fields. Please provide the necessary information.',
+        this.reusableDialog
+      );
+    }
+  }
+
+  onSaveClick(): void {
+    if (this.reimbursementFormGroup.valid) {
+      const reimbursementInfo = this.reimbursementFormGroup.getRawValue();
+      reimbursementInfo.plannedDate = this.datePipe.transform(
+        reimbursementInfo.plannedDate,
+        'yyyy-MM-dd'
+      );
+      const updatedReimbursementData = {
+        updatedReimbursement: reimbursementInfo,
+        updatedItems: [],
+        deletedReceipts: this.deletedImages,
+      };
+
+      for (let item of this.itemFormGroup) {
+        if (!item.valid) {
+          this.reimbursementFormGroup.markAllAsTouched();
+          for (let item of this.itemFormGroup) {
+            item.markAllAsTouched();
+          }
+          this.reusableDialogComponent.openErrorDialog(
+            'There seems to be a problem with your input fields. Please provide the necessary information.',
+            this.reusableDialog
+          );
+          return;
+        } else {
+          let itemIndex =
+            updatedReimbursementData.updatedItems.push(item.getRawValue()) - 1;
+          if (
+            this.newItems.find((val) => val === item.controls['_id']?.value)
+          ) {
+            updatedReimbursementData.updatedItems[itemIndex]['isNew'] = 1;
+            updatedReimbursementData.updatedItems[itemIndex]['isRemove'] = 0;
+          } else if (
+            this.deletedItems.find(
+              (val) => val === item.controls['_itemId']?.value
+            )
+          ) {
+            updatedReimbursementData.updatedItems[itemIndex]['isNew'] = 0;
+            updatedReimbursementData.updatedItems[itemIndex]['isRemove'] = 1;
+          } else {
+            updatedReimbursementData.updatedItems[itemIndex]['isNew'] = 0;
+            updatedReimbursementData.updatedItems[itemIndex]['isRemove'] = 0;
+          }
+        }
+      }
+
+      const data = new FormData();
+      data.set('data', JSON.stringify(updatedReimbursementData));
+
+      for (let file of this.uploadedImages) {
+        data.append('files', file, file.name);
+      }
+
+      ReusableDialogComponent.componentFlag = 'Update Reimbursement';
+      const updateDialogRef = this.reusableDialog.open(ReusableDialogComponent);
+      updateDialogRef.afterClosed().subscribe((result) => {
+        if (result == true) {
+          this.reimbursementsService
+            .putReimbursement(this.reimbursementData._reimbursementId, data)
+            .subscribe(
+              (res) => {
+                this.reusableDialogComponent.openSuccessDialog(
+                  'Reimbursement successfully updated.',
+                  this.reusableDialog
+                );
+                this.dialogRef.close();
+              },
+              (err) => {
+                console.log(err);
+                this.reusableDialogComponent.openErrorDialog(
+                  err.error?.error_message ?? err.statusText,
+                  this.reusableDialog
+                );
+              }
+            );
+        }
+      });
+    } else {
+      this.reimbursementFormGroup.markAllAsTouched();
+      for (let item of this.itemFormGroup) {
+        item.markAllAsTouched();
+      }
+      this.reusableDialogComponent.openErrorDialog(
+        'There seems to be a problem with your input fields. Please provide the necessary information.',
+        this.reusableDialog
       );
     }
   }
@@ -391,6 +549,29 @@ export class ReimbursementDialogComponent implements OnInit {
   }
 
   onCancelClick(): void {
-    this.dialogRef.close();
+    ReusableDialogComponent.componentFlag = 'Cancel Reimbursement';
+    const cancelDialogRef = this.reusableDialog.open(ReusableDialogComponent);
+    cancelDialogRef.afterClosed().subscribe((result) => {
+      if (result == true) {
+        this.reimbursementsService
+          .deleteReimbursement(this.reimbursementData._reimbursementId)
+          .subscribe(
+            (res) => {
+              this.reusableDialogComponent.openSuccessDialog(
+                'Reimbursement cancelled. Reimbursement will be deleted from the database.',
+                this.reusableDialog
+              );
+              this.dialogRef.close();
+            },
+            (err) => {
+              console.log(err);
+              this.reusableDialogComponent.openErrorDialog(
+                err.error?.error_message ?? err.statusText,
+                this.reusableDialog
+              );
+            }
+          );
+      }
+    });
   }
 }

@@ -13,6 +13,7 @@ export class LoginService {
   setLocalStorage(res) {
     const expires = moment().add(res.jwt.expiryNum, res.jwt.datetimeType);
     localStorage.setItem('token', res.jwt.token);
+    localStorage.setItem('auth', res.jwt.auth);
     localStorage.setItem('expires', JSON.stringify(expires.valueOf()));
   }
 

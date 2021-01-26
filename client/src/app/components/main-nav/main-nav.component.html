@@ -12,6 +12,14 @@
       <a mat-list-item [routerLink]="['/api/v1/account']" routerLinkActive="list-item-active">
         <mat-icon>account_circle</mat-icon>Account
       </a>
+      <a mat-list-item [routerLink]="['/api/v1/manage']" routerLinkActive="list-item-active"
+        *ngIf="getAuthority() === '1'">
+        <mat-icon>supervisor_account</mat-icon>Manage
+      </a>
+      <a mat-list-item [routerLink]="['/api/v1/finance']" routerLinkActive="list-item-active"
+        *ngIf="getAuthority() === '2'">
+        <mat-icon>analytics</mat-icon>Finance
+      </a>
       <a mat-list-item (click)="doLogout()" routerLinkActive="list-item-active">
         <mat-icon>power_settings_new</mat-icon>Logout
       </a>
