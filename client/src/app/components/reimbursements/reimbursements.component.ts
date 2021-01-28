@@ -111,7 +111,7 @@ export class ReimbursementsComponent implements AfterContentInit {
       {
         width: '800px',
         height: '900px',
-        data: null,
+        data: { auth: this.authLevel },
       }
     );
 

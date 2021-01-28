@@ -5,7 +5,7 @@
     <div *ngIf="isReimbursementsRoute() || isManageRoute() || isFinanceRoute()">
         <app-reimbursements></app-reimbursements>
     </div>
-    <div *ngIf="isAccountRoute()">
+    <div class="account-align" *ngIf="isAccountRoute()">
         <app-account></app-account>
     </div>
 </app-main-nav>

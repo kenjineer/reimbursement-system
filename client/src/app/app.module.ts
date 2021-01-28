@@ -37,7 +37,7 @@ import { RecentTableComponent } from './components/dashboard-items/recent-table/
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CategoryChartComponent } from './components/dashboard-items/category-chart/category-chart.component';
 import { ReimbursementDialogComponent } from './components/reimbursements-items/reimbursement-dialog/reimbursement-dialog/reimbursement-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -97,6 +97,10 @@ import { ReusableDialogComponent } from './components/reusable-dialog/reusable-d
     },
     AccessGuard,
     ReusableDialogComponent,
+    {
+      provide: MAT_DIALOG_DATA,
+      useValue: {},
+    },
   ],
   bootstrap: [AppComponent],
 })

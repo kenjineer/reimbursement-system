@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.14% </span>
+                <span class="strong">97.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/35</span>
+                <span class='fraction'>35/36</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/34</span>
+                <span class='fraction'>35/35</span>
             </div>
         
             
@@ -122,7 +122,18 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -130,27 +141,33 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,6 +191,10 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -182,6 +203,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -195,27 +217,33 @@ const bcrypt = require('bcrypt');
 exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmail) =&gt; {
 	const authenticateUser = async (username, password, done) =&gt; {
 		try {
+			// Validate credential type
 			const isEmail = joi.string().email().validate(username);
 			const isNum = joi.number().validate(username.replace('-', ''));
 			const isId = joi.string().min(7).max(10).validate(username.replace('-', ''));
 			let user;
 &nbsp;
 			if (!isEmail.error) {
+				// Validated as email successfully
 				const [result] = await readUserByEmail(username);
 				user = result[0];
 			} else if (!isNum.error &amp;&amp; !isId.error) {
+				// Validated as _userId successfully
 				const [result] = await readUserById(isId.value);
 				user = result[0];
 			} else {
+				// Validated as username
 				const [result] = await readUserByUsername(username);
 				user = result[0];
 			}
 &nbsp;
 			if (!user) {
+				// Validate user existence
 				return done(null, false, { error_message: 'No user with that id/username/email.' });
 			}
 &nbsp;
 			if (await bcrypt.compare(password, user.password)) {
+				// Validate login password
 				const issuedJwt = await issueJwt(user);
 				return done(null, user, issuedJwt);
 			} else {
@@ -233,14 +261,18 @@ exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmai
 &nbsp;
 const issueJwt = (user) =&gt; {
 	const _userId = user._userId;
+	const auth = user.authority;
 	const expiryNum = 8;
 	const datetimeType = 'h';
 	const expiresIn = `${expiryNum}${datetimeType}`;
+&nbsp;
+	// Create JWT payload
 	const payload = {
 		sub: _userId,
 		iat: Date.now(),
 	};
 &nbsp;
+	// Create a signed JWT with payload
 	const signedToken = jwt.sign(payload, process.env.SESSION_SECRET, {
 		expiresIn: expiresIn,
 		algorithm: 'HS256',
@@ -250,6 +282,7 @@ const issueJwt = (user) =&gt; {
 		token: `Bearer ${signedToken}`,
 		expiryNum: expiryNum,
 		datetimeType: datetimeType,
+		auth: auth,
 	};
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -259,7 +292,7 @@ const issueJwt = (user) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jan 20 2021 16:56:40 GMT+0800 (Philippine Standard Time)
+                at Wed Jan 27 2021 17:15:07 GMT+0800 (Philippine Standard Time)
             </div>
         </div>
         <script src="../prettify.js"></script>

@@ -1,8 +1,9 @@
 SELECT
-	DEV.devName,
+	USR._userId,
+    DEV.devName,
     OFC.officeName,
     POS.positionName,
-    TRIM(CONCAT_WS(" ", USR.firstname, USR.middlename, USR.lastname, USR.postfix)) AS managerName,
+    TRIM(CONCAT_WS(" ", USR.firstname, USR.middlename, USR.lastname, USR.suffix)) AS managerName,
     USR.email
 FROM users AS USR
 	INNER JOIN devs AS DEV

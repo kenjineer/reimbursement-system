@@ -24,6 +24,7 @@ describe('Login API', () => {
 					res.body.jwt.should.have.property('token');
 					res.body.jwt.expiryNum.should.be.eql(8);
 					res.body.jwt.datetimeType.should.be.eql('h');
+					res.body.jwt.auth.should.be.a('number');
 					done();
 				});
 		});
@@ -45,6 +46,7 @@ describe('Login API', () => {
 					res.body.jwt.should.have.property('token');
 					res.body.jwt.expiryNum.should.be.eql(8);
 					res.body.jwt.datetimeType.should.be.eql('h');
+					res.body.jwt.auth.should.be.a('number');
 					done();
 				});
 		});
@@ -66,6 +68,7 @@ describe('Login API', () => {
 					res.body.jwt.should.have.property('token');
 					res.body.jwt.expiryNum.should.be.eql(8);
 					res.body.jwt.datetimeType.should.be.eql('h');
+					res.body.jwt.auth.should.be.a('number');
 					done();
 				});
 		});

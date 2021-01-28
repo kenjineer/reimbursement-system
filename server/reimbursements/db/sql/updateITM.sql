@@ -1,5 +1,5 @@
 UPDATE
-	reimbursementitems
+	items
 SET
 	item = ?,
 	qty = ?,

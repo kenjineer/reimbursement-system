@@ -6,6 +6,7 @@ SELECT
 	RMB.plannedDate,
 	RMB.status,
 	RMB.approvalDate,
+	RMB.rejectionDate,
 	RMB.createdDate
 FROM
 	reimbursements AS RMB

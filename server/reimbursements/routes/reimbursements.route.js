@@ -24,6 +24,11 @@ router.put(
 	reimbursementsController.putReimbursement
 );
 
+router.put(
+	'/reimbursements/:_reimbursementId/status/:statusFlag',
+	reimbursementsController.putReimbursementStatus
+);
+
 router.delete('/reimbursements/:_reimbursementId', reimbursementsController.deleteReimbursement);
 
 router.delete(
@@ -34,11 +39,6 @@ router.delete(
 router.delete(
 	'/reimbursements/:_reimbursementId/receipts/:_receiptId',
 	reimbursementsController.deleteReceipt
-);
-
-router.put(
-	'reimbursements/:_reimbursementId/status/:statusFlag',
-	reimbursementsController.putReimbursementStatus
 );
 
 module.exports = router;

@@ -40,15 +40,15 @@ exports.putUserAccount = async (req, res) => {
 
 		if (!(await bcrypt.compare(req.body.password, user[0].password))) {
 			const newPassword = await bcrypt.hash(req.body.password, 10);
-			console.log(newPassword);
+			console.log(user[0], newPassword);
 			user[0].password = newPassword;
 		}
 
 		// Update User by _userId
-		await User.updateUser(user[0]);
+		await User.updateUser(user[0], _userId);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send({ error_message: 'Cannot connect to database / System Error' });

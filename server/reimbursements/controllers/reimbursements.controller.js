@@ -10,8 +10,9 @@ const User = require('../models/user.model');
 const getAuthUser = require('../passport-config').getAuthUser;
 const unlink = util.promisify(fs.unlink);
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 const URL = `http://localhost:${PORT}`;
+const EmailURL = `http://localhost:3004`;
 const UPLOAD_DIR = path.join(__dirname, '..', 'assets', 'uploads');
 const CATCH_ERR = { error_message: 'Cannot connect to database / System Error' };
 
@@ -33,7 +34,9 @@ exports.getUserReimbursements = async (req, res) => {
 			[reimbursements] = await Reimbursement.readReimbursementsFin(user._userId);
 		} else {
 			// Authority Level Not Recognized
-			return res.status(401).send();
+			return res
+				.status(401)
+				.send({ error_message: 'Unauthorized! User authority level not recognized.' });
 		}
 
 		// Response object
@@ -225,7 +228,7 @@ exports.putReimbursement = async (req, res) => {
 				// Call API DELETE /api/reimbursements/:_reimbursementId/items/_itemId
 				update.push(
 					axios.delete(
-						`${URL}/api/reimbursement/${_reimbursementId}/items/${updatedItem._itemId}`,
+						`${URL}/api/v1/reimbursements/${_reimbursementId}/items/${updatedItem._itemId}`,
 						{
 							headers: {
 								Authorization: req.header('authorization'),
@@ -241,7 +244,7 @@ exports.putReimbursement = async (req, res) => {
 			// Call API DELETE /api/reimbursements/:_reimbursementId/receipts/:_receiptId
 			update.push(
 				axios.delete(
-					`${URL}/api/reimbursement/${_reimbursementId}/receipts/${_receiptId}`,
+					`${URL}/api/v1/reimbursements/${_reimbursementId}/receipts/${_receiptId}`,
 					{
 						headers: {
 							Authorization: req.header('authorization'),
@@ -272,6 +275,56 @@ exports.putReimbursement = async (req, res) => {
 		// Run promises in array asyncronously
 		if (update.length !== 0) await Promise.all(update);
 		if (rmuploads.length !== 0) await Promise.all(rmuploads);
+
+		// Return acknowledgement response
+		return res.status(200).send();
+	} catch (err) /* istanbul ignore next */ {
+		console.log(err);
+		return res.status(503).send(CATCH_ERR);
+	}
+};
+
+// ROUTE /api/v1/reimbursements/:_reimbursementId/status/:statusFlag
+// Approve, reject or release employee reimbursement.
+exports.putReimbursementStatus = async (req, res) => {
+	try {
+		if (req.params.statusFlag === '2') {
+			// Update Reimbursement Status to Approved by _reimbursementId
+			await Reimbursement.updateReimbursementApprove(req.params._reimbursementId);
+			await axios.post(
+				`${EmailURL}/api/v1/email/approval/${req.params._reimbursementId}`,
+				req.body,
+				{
+					headers: {
+						Authorization: req.header('authorization'),
+					},
+				}
+			);
+		} else if (req.params.statusFlag === '0') {
+			// Update Reimbursement Status to Rejected by _reimbursementId
+			await Reimbursement.updateReimbursementReject(req.params._reimbursementId);
+			await axios.post(
+				`${EmailURL}/api/v1/email/rejection/${req.params._reimbursementId}`,
+				req.body,
+				{
+					headers: {
+						Authorization: req.header('authorization'),
+					},
+				}
+			);
+		} else if (req.params.statusFlag === '3') {
+			// Update Reimbursement Status to Released by _reimbursementId
+			await Reimbursement.updateReimbursementRelease(req.params._reimbursementId);
+			await axios.post(
+				`${EmailURL}/api/v1/email/release/${req.params._reimbursementId}`,
+				req.body,
+				{
+					headers: {
+						Authorization: req.header('authorization'),
+					},
+				}
+			);
+		}
 
 		// Return acknowledgement response
 		return res.status(200).send();
@@ -323,44 +376,6 @@ exports.deleteReceipt = async (req, res) => {
 	try {
 		// Delete Reimbursement Receipt by _reimbursementId and _receiptId
 		await Receipt.deleteReceipt(req.params._receiptId, req.params._reimbursementId);
-
-		// Return acknowledgement response
-		return res.status(200).send();
-	} catch (err) /* istanbul ignore next */ {
-		console.log(err);
-		return res.status(503).send(CATCH_ERR);
-	}
-};
-
-// ROUTE /api/v1/reimbursements/:_reimbursementId/status/:statusFlag
-// Approve, reject or release employee reimbursement.
-exports.putReimbursementStatus = async (req, res) => {
-	try {
-		if (req.params.statusFlag === 2) {
-			// Update Reimbursement Status to Approved by _reimbursementId
-			await Reimbursement.updateReimbursementApprove(req.params._reimbursementId);
-			await axios.put(`${URL}/api/v1/email/approval/${_reimbursementId}`, {
-				headers: {
-					Authorization: req.header('authorization'),
-				},
-			});
-		} else if (req.params.statusFlag === 0) {
-			// Update Reimbursement Status to Rejected by _reimbursementId
-			await Reimbursement.updateReimbursementReject(req.params._reimbursementId);
-			await axios.put(`${URL}/api/v1/email/rejection/${_reimbursementId}`, {
-				headers: {
-					Authorization: req.header('authorization'),
-				},
-			});
-		} else if (req.params.statusFlag === 3) {
-			// Update Reimbursement Status to Released by _reimbursementId
-			await Reimbursement.updateReimbursementRelease(req.params._reimbursementId);
-			await axios.put(`${URL}/api/v1/email/release/${_reimbursementId}`, {
-				headers: {
-					Authorization: req.header('authorization'),
-				},
-			});
-		}
 
 		// Return acknowledgement response
 		return res.status(200).send();

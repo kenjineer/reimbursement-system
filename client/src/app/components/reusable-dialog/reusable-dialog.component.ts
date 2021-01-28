@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export interface DialogData {
+  remarks: string;
+}
 
 @Component({
   selector: 'app-reusable-dialog',
@@ -12,7 +16,7 @@ export class ReusableDialogComponent implements OnInit {
   static title: string = '';
   static content: string = '';
 
-  constructor() {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   ngOnInit(): void {}
 

@@ -7,8 +7,13 @@ const getAuthUser = require('../passport-config').getAuthUser;
 
 // Transporter config
 const CONFIG = {
-	host: 'webmail.awsys-i.com',
-	port: 25,
+	host: 'smtp.gmail.com', // Hostname
+	port: 465, // Port
+	secure: true, // Use SSL
+	auth: {
+		user: process.env.MAIL_USER, // Username
+		pass: process.env.MAIL_PASS, // Password
+	},
 };
 
 // ROUTE /api/v1/email/approval/:_reimbursementId
@@ -20,7 +25,7 @@ exports.postApprovalEmail = async (req, res) => {
 	try {
 		// Get Approved Reimbursement by _reimbursementId and _managerId
 		const [aprReimbursement] = await Reimbursement.readReimbursementsMgr(
-			res.params._reimbursementId,
+			req.params._reimbursementId,
 			2,
 			manager._userId
 		);
@@ -35,16 +40,16 @@ exports.postApprovalEmail = async (req, res) => {
 		req.app.renderAsync = util.promisify(req.app.render);
 		const approvalHtmlBody = await req.app.renderAsync('views/body/approvedMail', {
 			pageTitle: 'Approval',
-			_reimbursementId: res.params._reimbursementId,
+			_reimbursementId: req.params._reimbursementId,
 			employee: employee[0],
 			aprReimbursement: aprReimbursement[0],
 			manager: manager,
-			remarks: res.body.remarks,
+			remarks: req.body.remarks,
 		});
 
 		// Create mail options
 		const mailOptions = {
-			from: manager.email, // Sender Address
+			cc: manager.email, // CC Address
 			to: employee[0].email, // Receiver Address
 			subject: '【RTS】Reimbursement Application: Approved', // Subject Line
 			html: approvalHtmlBody, // Mail Body
@@ -70,7 +75,7 @@ exports.postRejectionEmail = async (req, res) => {
 	try {
 		// Get Approved Reimbursement by _reimbursementId and _managerId
 		const [rjtReimbursement] = await Reimbursement.readReimbursementsMgr(
-			res.params._reimbursementId,
+			req.params._reimbursementId,
 			0,
 			manager._userId
 		);
@@ -85,16 +90,16 @@ exports.postRejectionEmail = async (req, res) => {
 		req.app.renderAsync = util.promisify(req.app.render);
 		const rejectionHtmlBody = await req.app.renderAsync('views/body/rejectedMail', {
 			pageTitle: 'Rejection',
-			_reimbursementId: res.params._reimbursementId,
+			_reimbursementId: req.params._reimbursementId,
 			employee: employee[0],
 			rjtReimbursement: rjtReimbursement[0],
 			manager: manager,
-			remarks: res.body.remarks,
+			remarks: req.body.remarks,
 		});
 
 		// Create mail options
 		const mailOptions = {
-			from: manager.email, // Sender Address
+			cc: manager.email, // CC Address
 			to: employee[0].email, // Receiver Address
 			subject: '【RTS】Reimbursement Application: Rejected', // Subject Line
 			html: rejectionHtmlBody, // Mail Body
@@ -119,8 +124,8 @@ exports.postReleaseEmail = async (req, res) => {
 
 	try {
 		// Get Approved Reimbursement by _reimbursementId and _managerId
-		const [rlsReimbursement] = await Reimbursement.readReimbursementsMgr(
-			res.params._reimbursementId
+		const [rlsReimbursement] = await Reimbursement.readReimbursementsFin(
+			req.params._reimbursementId
 		);
 
 		// Get Employee by _employeeId
@@ -133,16 +138,16 @@ exports.postReleaseEmail = async (req, res) => {
 		req.app.renderAsync = util.promisify(req.app.render);
 		const releaseHtmlBody = await req.app.renderAsync('views/body/releasedMail', {
 			pageTitle: 'Release',
-			_reimbursementId: res.params._reimbursementId,
+			_reimbursementId: req.params._reimbursementId,
 			employee: employee[0],
 			rlsReimbursement: rlsReimbursement[0],
 			finOfficer: finOfficer,
-			remarks: res.body.remarks,
+			remarks: req.body.remarks,
 		});
 
 		// Create mail options
 		const mailOptions = {
-			from: finOfficer.email, // Sender Address
+			cc: finOfficer.email, // CC Address
 			to: employee[0].email, // Receiver Address
 			subject: '【RTS】Reimbursement Application: Released', // Subject Line
 			html: releaseHtmlBody, // Mail Body

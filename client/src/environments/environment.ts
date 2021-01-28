@@ -20,5 +20,4 @@ export const baseUrls = {
   account: 'http://localhost:3001/api/v1',
   dashboard: 'http://localhost:3002/api/v1',
   reimbursements: 'http://localhost:3003/api/v1',
-  email: 'http://localhost:3004/api/v1',
 };

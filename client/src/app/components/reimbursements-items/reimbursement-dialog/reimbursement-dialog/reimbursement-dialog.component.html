@@ -5,7 +5,7 @@
 </h1>
 <h1 mat-dialog-title *ngIf="isAddReimbursement">New Reimbursement</h1>
 <div mat-dialog-content>
-    <h2 *ngIf="!isAddReimbursement && reimbursementFormGroup.controls['status'].value === 1 && authLevel === 0">
+    <h2 *ngIf="!isAddReimbursement && reimbursementFormGroup.controls['status']?.value === 1 && authLevel === 0">
         <mat-slide-toggle [(ngModel)]="isEditReimbursement" (change)="toggleEdit()">Edit
         </mat-slide-toggle>
     </h2>
@@ -193,10 +193,10 @@
         *ngIf="!isAddReimbursement && isEditReimbursement">Save</button>
     <button mat-raised-button color="warn" (click)="onCancelClick()"
         *ngIf="!isAddReimbursement && isEditReimbursement">Cancel Request</button>
-    <button mat-raised-button color="primary"
-        *ngIf="reimbursementFormGroup.controls['status'].value === 1 && authLevel === 1">Approve</button>
-    <button mat-raised-button color="warn"
-        *ngIf="reimbursementFormGroup.controls['status'].value === 1 && authLevel === 1">Reject</button>
-    <button mat-raised-button color="primary"
-        *ngIf="reimbursementFormGroup.controls['status'].value === 2 && authLevel === 2">Release</button>
+    <button mat-raised-button color="primary" (click)="onApproveClick()"
+        *ngIf="reimbursementFormGroup.controls['status']?.value === 1 && authLevel === 1">Approve</button>
+    <button mat-raised-button color="warn" (click)="onRejectClick()"
+        *ngIf="reimbursementFormGroup.controls['status']?.value === 1 && authLevel === 1">Reject</button>
+    <button mat-raised-button color="primary" (click)="onReleaseClick()"
+        *ngIf="reimbursementFormGroup.controls['status']?.value === 2 && authLevel === 2">Release</button>
 </div>

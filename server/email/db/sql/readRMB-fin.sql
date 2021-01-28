@@ -5,7 +5,7 @@ SELECT
 	RMB.totalCost,
 	RMB.plannedDate,
 	RMB.status,
-	RMB.approvalDate,
+	RMB.releaseDate,
 	RMB.createdDate
 FROM
 	reimbursements AS RMB

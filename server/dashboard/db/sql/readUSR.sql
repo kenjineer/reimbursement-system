@@ -1,12 +1,12 @@
 SELECT
     USR._userId,
     DEV.devName,
-    OFC.officeName,
+    OFC.officeCode,
     POS.positionName,
     USR.firstname,
     USR.middlename,
     USR.lastname,
-    USR.postfix,
+    USR.suffix,
     USR.username,
     USR.email,
     USR.gender

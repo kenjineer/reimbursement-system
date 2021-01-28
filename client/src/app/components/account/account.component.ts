@@ -1,93 +1,147 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import User from 'src/app/models/user.model';
+import { AccountService } from 'src/app/services/account/account.service';
+import { ReusableDialogComponent } from '../reusable-dialog/reusable-dialog.component';
 
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+  styleUrls: ['./account.component.css'],
 })
-export class AccountComponent {
-  addressForm = this.fb.group({
-    company: null,
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
-    address: [null, Validators.required],
-    address2: null,
-    city: [null, Validators.required],
-    state: [null, Validators.required],
-    postalCode: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(5)])
-    ],
-    shipping: ['free', Validators.required]
+export class AccountComponent implements OnInit {
+  accountForm = new FormGroup({
+    _employeeId: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
+    devName: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
+    officeCode: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
+    positionName: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
+    nickname: new FormControl(''),
+    firstname: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
+    middlename: new FormControl({ value: '', disabled: true }),
+    lastname: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
+    suffix: new FormControl({ value: '', disabled: true }),
+    username: new FormControl('', Validators.required),
+    password: new FormControl('', [
+      Validators.minLength(6),
+      Validators.maxLength(16),
+    ]),
+    confirmPassword: new FormControl(''),
+    email: new FormControl({ value: '', disabled: true }, Validators.required),
+    gender: new FormControl({ value: '', disabled: true }, Validators.required),
   });
 
-  hasUnitNumber = false;
+  accountInfo: User;
+  isPasswordMatch: boolean;
 
-  states = [
-    {name: 'Alabama', abbreviation: 'AL'},
-    {name: 'Alaska', abbreviation: 'AK'},
-    {name: 'American Samoa', abbreviation: 'AS'},
-    {name: 'Arizona', abbreviation: 'AZ'},
-    {name: 'Arkansas', abbreviation: 'AR'},
-    {name: 'California', abbreviation: 'CA'},
-    {name: 'Colorado', abbreviation: 'CO'},
-    {name: 'Connecticut', abbreviation: 'CT'},
-    {name: 'Delaware', abbreviation: 'DE'},
-    {name: 'District Of Columbia', abbreviation: 'DC'},
-    {name: 'Federated States Of Micronesia', abbreviation: 'FM'},
-    {name: 'Florida', abbreviation: 'FL'},
-    {name: 'Georgia', abbreviation: 'GA'},
-    {name: 'Guam', abbreviation: 'GU'},
-    {name: 'Hawaii', abbreviation: 'HI'},
-    {name: 'Idaho', abbreviation: 'ID'},
-    {name: 'Illinois', abbreviation: 'IL'},
-    {name: 'Indiana', abbreviation: 'IN'},
-    {name: 'Iowa', abbreviation: 'IA'},
-    {name: 'Kansas', abbreviation: 'KS'},
-    {name: 'Kentucky', abbreviation: 'KY'},
-    {name: 'Louisiana', abbreviation: 'LA'},
-    {name: 'Maine', abbreviation: 'ME'},
-    {name: 'Marshall Islands', abbreviation: 'MH'},
-    {name: 'Maryland', abbreviation: 'MD'},
-    {name: 'Massachusetts', abbreviation: 'MA'},
-    {name: 'Michigan', abbreviation: 'MI'},
-    {name: 'Minnesota', abbreviation: 'MN'},
-    {name: 'Mississippi', abbreviation: 'MS'},
-    {name: 'Missouri', abbreviation: 'MO'},
-    {name: 'Montana', abbreviation: 'MT'},
-    {name: 'Nebraska', abbreviation: 'NE'},
-    {name: 'Nevada', abbreviation: 'NV'},
-    {name: 'New Hampshire', abbreviation: 'NH'},
-    {name: 'New Jersey', abbreviation: 'NJ'},
-    {name: 'New Mexico', abbreviation: 'NM'},
-    {name: 'New York', abbreviation: 'NY'},
-    {name: 'North Carolina', abbreviation: 'NC'},
-    {name: 'North Dakota', abbreviation: 'ND'},
-    {name: 'Northern Mariana Islands', abbreviation: 'MP'},
-    {name: 'Ohio', abbreviation: 'OH'},
-    {name: 'Oklahoma', abbreviation: 'OK'},
-    {name: 'Oregon', abbreviation: 'OR'},
-    {name: 'Palau', abbreviation: 'PW'},
-    {name: 'Pennsylvania', abbreviation: 'PA'},
-    {name: 'Puerto Rico', abbreviation: 'PR'},
-    {name: 'Rhode Island', abbreviation: 'RI'},
-    {name: 'South Carolina', abbreviation: 'SC'},
-    {name: 'South Dakota', abbreviation: 'SD'},
-    {name: 'Tennessee', abbreviation: 'TN'},
-    {name: 'Texas', abbreviation: 'TX'},
-    {name: 'Utah', abbreviation: 'UT'},
-    {name: 'Vermont', abbreviation: 'VT'},
-    {name: 'Virgin Islands', abbreviation: 'VI'},
-    {name: 'Virginia', abbreviation: 'VA'},
-    {name: 'Washington', abbreviation: 'WA'},
-    {name: 'West Virginia', abbreviation: 'WV'},
-    {name: 'Wisconsin', abbreviation: 'WI'},
-    {name: 'Wyoming', abbreviation: 'WY'}
-  ];
+  constructor(
+    private accountService: AccountService,
+    private reusableDialogComponent: ReusableDialogComponent,
+    private reusableDialog: MatDialog
+  ) {}
 
-  constructor(private fb: FormBuilder) {}
+  ngOnInit() {
+    this.accountService.getUserAccount().subscribe((res) => {
+      this.accountInfo = res.account;
+      this.accountForm.controls['_employeeId'].setValue(
+        this.accountInfo._userId
+      );
+      this.accountForm.controls['devName'].setValue(this.accountInfo.devName);
+      this.accountForm.controls['officeCode'].setValue(
+        this.accountInfo.officeCode
+      );
+      this.accountForm.controls['positionName'].setValue(
+        this.accountInfo.positionName
+      );
+      this.accountForm.controls['nickname'].setValue(this.accountInfo.nickname);
+      this.accountForm.controls['firstname'].setValue(
+        this.accountInfo.firstname
+      );
+      this.accountForm.controls['middlename'].setValue(
+        this.accountInfo.middlename
+      );
+      this.accountForm.controls['lastname'].setValue(this.accountInfo.lastname);
+      this.accountForm.controls['suffix'].setValue(this.accountInfo.suffix);
+      this.accountForm.controls['username'].setValue(this.accountInfo.username);
+      this.accountForm.controls['email'].setValue(this.accountInfo.email);
+      this.accountForm.controls['gender'].setValue(
+        this.accountInfo.gender == 0
+          ? 'Male'
+          : this.accountInfo.gender == 1
+          ? 'Female'
+          : ''
+      );
+    });
+  }
+
+  passwordMatchValidator() {
+    const passwordInput = this.accountForm?.controls['password'].value;
+    const confirmPassword = this.accountForm?.controls['confirmPassword'].value;
+    const setIsMatched = this.accountForm?.controls['confirmPassword'];
+    this.isPasswordMatch = true;
+
+    if (passwordInput && confirmPassword) {
+      if (passwordInput === confirmPassword) {
+        console.log('hey');
+        setIsMatched.setErrors(null);
+        this.isPasswordMatch = true;
+      } else {
+        console.log('hey2');
+        setIsMatched.setErrors({ notMatched: true });
+        this.isPasswordMatch = false;
+      }
+    }
+  }
 
   onSubmit() {
-    alert('Thanks!');
+    if (this.accountForm.valid) {
+      const account = this.accountForm.getRawValue() as User;
+      const updateAccount = {
+        nickname: account.nickname,
+        username: account.username,
+        password: account.password,
+      };
+      this.accountService.putUserAccount(updateAccount).subscribe(
+        (res) => {
+          this.accountForm?.controls['password'].setValue('');
+          this.accountForm?.controls['confirmPassword'].setValue('');
+          this.reusableDialogComponent.openSuccessDialog(
+            'User account successfully updated.',
+            this.reusableDialog
+          );
+          this.ngOnInit();
+        },
+        (err) => {
+          console.log(err);
+          this.reusableDialogComponent.openErrorDialog(
+            err.error?.error_message ?? err.statusText,
+            this.reusableDialog
+          );
+        }
+      );
+    }
   }
 }

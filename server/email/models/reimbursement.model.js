@@ -10,11 +10,11 @@ const readReimbursementsFin = path.join(dir, 'readRMB-fin.sql');
 module.exports = class Reimbursement {
 	static readReimbursementsMgr(_reimbursementId, status, _userId) {
 		const reimbursement = fs.readFileSync(readReimbursementsMgr).toString();
-		return db.execute(reimbursement, [status, _userId]);
+		return db.execute(reimbursement, [_reimbursementId, status, _userId]);
 	}
 
-	static readReimbursementsFin(_reimbursementId, _userId) {
+	static readReimbursementsFin(_reimbursementId) {
 		const reimbursement = fs.readFileSync(readReimbursementsFin).toString();
-		return db.execute(reimbursement, [_userId]);
+		return db.execute(reimbursement, [_reimbursementId]);
 	}
 };

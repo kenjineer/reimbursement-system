@@ -26,6 +26,7 @@ exports.initialize = (passport, readUserMgrFin) => {
 				user.push(result[0]);
 				return done(null, user[0]);
 			} catch (err) /* istanbul ignore next */ {
+				console.log(err);
 				done(err);
 			}
 		})

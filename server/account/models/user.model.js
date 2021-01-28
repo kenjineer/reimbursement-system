@@ -19,13 +19,13 @@ module.exports = class User {
 		return db.execute(user, [_userId]);
 	}
 
-	static updateUser(userUpdate) {
+	static updateUser(userUpdate, _userId) {
 		const user = fs.readFileSync(updateUser).toString();
 		return db.execute(user, [
 			userUpdate.nickname,
 			userUpdate.username,
 			userUpdate.password,
-			userUpdate._userId,
+			_userId,
 		]);
 	}
 };

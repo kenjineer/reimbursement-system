@@ -37,21 +37,32 @@ export class ReimbursementsService {
       .toPromise();
   }
 
-  postNewReimbursement(data: FormData): Observable<any> {
+  postNewReimbursement(data: FormData) {
     return this.http.post(
       `${baseUrls.reimbursements}/reimbursements/new`,
       data
     );
   }
 
-  putReimbursement(_reimbursementId: number, data: FormData): Observable<any> {
+  putReimbursement(_reimbursementId: number, data: FormData) {
     return this.http.put(
       `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}`,
       data
     );
   }
 
-  deleteReimbursement(_reimbursementId: number): Observable<any> {
+  putReimbursementStatus(
+    _reimbursementId: number,
+    statusFlag: number,
+    remarks: string
+  ) {
+    return this.http.put(
+      `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}/status/${statusFlag}`,
+      { remarks: remarks }
+    );
+  }
+
+  deleteReimbursement(_reimbursementId: number) {
     return this.http.delete(
       `${baseUrls.reimbursements}/reimbursements/${_reimbursementId}`
     );

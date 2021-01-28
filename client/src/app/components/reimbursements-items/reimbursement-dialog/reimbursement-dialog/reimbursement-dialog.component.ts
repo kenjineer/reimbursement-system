@@ -52,9 +52,15 @@ class PickDateAdapter extends NativeDateAdapter {
   ],
 })
 export class ReimbursementDialogComponent implements OnInit {
+  readonly APPROVE: number = 2;
+  readonly REJECT: number = 0;
+  readonly RELEASE: number = 3;
   // Form Control Groups
   reimbursementFormGroup: FormGroup;
   itemFormGroup: FormGroup[];
+  approvalRemarks: string = '';
+  rejectionRemarks: string = '';
+  releaseRemarks: string = '';
 
   // Fetched Data
   reimbursementData: Reimbursement;
@@ -93,7 +99,7 @@ export class ReimbursementDialogComponent implements OnInit {
     private reusableDialogComponent: ReusableDialogComponent,
     private reusableDialog: MatDialog
   ) {
-    if (data) {
+    if (data.reimbursement) {
       this.reimbursementData = data.reimbursement;
       this.isAddReimbursement = false;
     } else {
@@ -398,7 +404,7 @@ export class ReimbursementDialogComponent implements OnInit {
       const reimbursementInfo = this.reimbursementFormGroup.getRawValue();
       reimbursementInfo.plannedDate = this.datePipe.transform(
         reimbursementInfo.plannedDate,
-        'yyyy-MM-dd'
+        'yyyy-MM-dd hh:mm:ss'
       );
       const newReimbursementData = {
         newReimbursement: reimbursementInfo,
@@ -460,7 +466,7 @@ export class ReimbursementDialogComponent implements OnInit {
       const reimbursementInfo = this.reimbursementFormGroup.getRawValue();
       reimbursementInfo.plannedDate = this.datePipe.transform(
         reimbursementInfo.plannedDate,
-        'yyyy-MM-dd'
+        'yyyy-MM-dd hh:mm:ss'
       );
       const updatedReimbursementData = {
         updatedReimbursement: reimbursementInfo,
@@ -499,6 +505,14 @@ export class ReimbursementDialogComponent implements OnInit {
             updatedReimbursementData.updatedItems[itemIndex]['isRemove'] = 0;
           }
         }
+      }
+
+      for (let _itemId of this.deletedItems) {
+        updatedReimbursementData.updatedItems.push({
+          _itemId: _itemId,
+          isNew: 0,
+          isRemove: 1,
+        });
       }
 
       const data = new FormData();
@@ -544,10 +558,6 @@ export class ReimbursementDialogComponent implements OnInit {
     }
   }
 
-  onCloseClick(): void {
-    this.dialogRef.close();
-  }
-
   onCancelClick(): void {
     ReusableDialogComponent.componentFlag = 'Cancel Reimbursement';
     const cancelDialogRef = this.reusableDialog.open(ReusableDialogComponent);
@@ -573,5 +583,111 @@ export class ReimbursementDialogComponent implements OnInit {
           );
       }
     });
+  }
+
+  onApproveClick(): void {
+    ReusableDialogComponent.componentFlag = 'Approve Reimbursement';
+    const approveDialogRef = this.reusableDialog.open(ReusableDialogComponent, {
+      data: { remarks: this.approvalRemarks },
+    });
+    approveDialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.approvalRemarks = result;
+        this.reimbursementsService
+          .putReimbursementStatus(
+            this.reimbursementData._reimbursementId,
+            this.APPROVE,
+            this.approvalRemarks
+          )
+          .subscribe(
+            (res) => {
+              this.reusableDialogComponent.openSuccessDialog(
+                'Reimbursement Approved. An email will be sent to the Reimbursement Applicant.',
+                this.reusableDialog
+              );
+              this.dialogRef.close();
+            },
+            (err) => {
+              console.log(err);
+              this.reusableDialogComponent.openErrorDialog(
+                err.error?.error_message ?? err.statusText,
+                this.reusableDialog
+              );
+            }
+          );
+      }
+    });
+  }
+
+  onRejectClick(): void {
+    ReusableDialogComponent.componentFlag = 'Reject Reimbursement';
+    const rejectDialogRef = this.reusableDialog.open(ReusableDialogComponent, {
+      data: { remarks: this.rejectionRemarks },
+    });
+    rejectDialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.rejectionRemarks = result;
+        this.reimbursementsService
+          .putReimbursementStatus(
+            this.reimbursementData._reimbursementId,
+            this.REJECT,
+            this.rejectionRemarks
+          )
+          .subscribe(
+            (res) => {
+              this.reusableDialogComponent.openSuccessDialog(
+                'Reimbursement Rejected. An email will be sent to the Reimbursement Applicant.',
+                this.reusableDialog
+              );
+              this.dialogRef.close();
+            },
+            (err) => {
+              console.log(err);
+              this.reusableDialogComponent.openErrorDialog(
+                err.error?.error_message ?? err.statusText,
+                this.reusableDialog
+              );
+            }
+          );
+      }
+    });
+  }
+
+  onReleaseClick(): void {
+    ReusableDialogComponent.componentFlag = 'Release Reimbursement';
+    const releaseDialogRef = this.reusableDialog.open(ReusableDialogComponent, {
+      data: { remarks: this.releaseRemarks },
+    });
+    releaseDialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.releaseRemarks = result;
+        this.reimbursementsService
+          .putReimbursementStatus(
+            this.reimbursementData._reimbursementId,
+            this.RELEASE,
+            this.releaseRemarks
+          )
+          .subscribe(
+            (res) => {
+              this.reusableDialogComponent.openSuccessDialog(
+                'Reimbursement Released. An email will be sent to the Reimbursement Applicant.',
+                this.reusableDialog
+              );
+              this.dialogRef.close();
+            },
+            (err) => {
+              console.log(err);
+              this.reusableDialogComponent.openErrorDialog(
+                err.error?.error_message ?? err.statusText,
+                this.reusableDialog
+              );
+            }
+          );
+      }
+    });
+  }
+
+  onCloseClick(): void {
+    this.dialogRef.close();
   }
 }
