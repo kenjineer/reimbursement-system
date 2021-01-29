@@ -38,9 +38,11 @@ exports.putUserAccount = async (req, res) => {
 		user[0].nickname = req.body.nickname;
 		user[0].username = req.body.username;
 
-		if (!(await bcrypt.compare(req.body.password, user[0].password))) {
+		if (
+			req.body.password !== '' &&
+			!(await bcrypt.compare(req.body.password, user[0].password))
+		) {
 			const newPassword = await bcrypt.hash(req.body.password, 10);
-			console.log(user[0], newPassword);
 			user[0].password = newPassword;
 		}
 

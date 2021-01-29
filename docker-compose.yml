@@ -1,0 +1,86 @@
+version: '3.8'
+services:
+    login:
+        image: kenjineer/rts-login:1.0
+        container_name: rts-login-container
+        depends_on:
+            - mysql
+        ports:
+            - '3000:3000'
+        environment:
+            - SESSION_SECRET=55eec8a18796e8adf3f12006e181a967972d94cbdaddd28647ab0f6f70516c21f23b7cf5cc3b38c6ff3025704f42ebf897df0aa23529df9638bd0d1868320118
+            - MYSQL_URL=rts-mysql-container
+            - MYSQL_USERNAME=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_DATABASE=reimbursement_system
+            - WEB_URL=http://localhost:4200
+    account:
+        image: kenjineer/rts-account:1.0
+        container_name: rts-account-container
+        depends_on:
+            - mysql
+        ports:
+            - '3001:3001'
+        environment:
+            - SESSION_SECRET=55eec8a18796e8adf3f12006e181a967972d94cbdaddd28647ab0f6f70516c21f23b7cf5cc3b38c6ff3025704f42ebf897df0aa23529df9638bd0d1868320118
+            - MYSQL_URL=rts-mysql-container
+            - MYSQL_USERNAME=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_DATABASE=reimbursement_system
+            - WEB_URL=http://localhost:4200
+    dashboard:
+        image: kenjineer/rts-dashboard:1.0
+        container_name: rts-dashboard-container
+        depends_on:
+            - mysql
+        ports:
+            - '3002:3002'
+        environment:
+            - SESSION_SECRET=55eec8a18796e8adf3f12006e181a967972d94cbdaddd28647ab0f6f70516c21f23b7cf5cc3b38c6ff3025704f42ebf897df0aa23529df9638bd0d1868320118
+            - MYSQL_URL=rts-mysql-container
+            - MYSQL_USERNAME=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_DATABASE=reimbursement_system
+            - WEB_URL=http://localhost:4200
+    reimbursement:
+        image: kenjineer/rts-reimbursement:1.0
+        container_name: rts-reimbursement-container
+        depends_on:
+            - mysql
+        ports:
+            - '3003:3003'
+        environment:
+            - SESSION_SECRET=55eec8a18796e8adf3f12006e181a967972d94cbdaddd28647ab0f6f70516c21f23b7cf5cc3b38c6ff3025704f42ebf897df0aa23529df9638bd0d1868320118
+            - MYSQL_URL=rts-mysql-container
+            - MYSQL_USERNAME=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_DATABASE=reimbursement_system
+            - WEB_URL=http://localhost:4200
+    email:
+        image: kenjineer/rts-email:1.0
+        container_name: rts-email-container
+        depends_on:
+            - mysql
+        ports:
+            - '3004:3004'
+        environment:
+            - SESSION_SECRET=55eec8a18796e8adf3f12006e181a967972d94cbdaddd28647ab0f6f70516c21f23b7cf5cc3b38c6ff3025704f42ebf897df0aa23529df9638bd0d1868320118
+            - MYSQL_URL=rts-mysql-container
+            - MYSQL_USERNAME=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_DATABASE=reimbursement_system
+            - WEB_URL=http://localhost:4200
+            - MAIL_USER=aws.teampoc
+            - MAIL_PASS=Awsys+456
+    mysql:
+        image: kenjineer/rts-mysql:8.0
+        container_name: rts-mysql-container
+        ports:
+            - '3306:3306'
+        restart: always
+        hostname: rts-mysql-host
+        environment:
+            - MYSQL_USERNAME=root
+            - MYSQL_PASSWORD=root
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=reimbursement_system

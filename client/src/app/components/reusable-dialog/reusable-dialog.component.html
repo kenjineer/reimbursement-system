@@ -81,6 +81,15 @@
     </div>
 </div>
 
+<div *ngIf='getComponentFlag() == "Update Account"'>
+    <h1 mat-dialog-title>Update Account</h1>
+    <div mat-dialog-content>Are you sure you want to update your account?</div>
+    <div mat-dialog-actions>
+        <button mat-raised-button [mat-dialog-close]="true">Yes</button>
+        <button mat-raised-button mat-dialog-close cdkFocusInitial color="primary">No</button>
+    </div>
+</div>
+
 <div *ngIf='getComponentFlag() == "Common"'>
     <h1 mat-dialog-title>{{getDialogTitle()}}</h1>
     <div mat-dialog-content>

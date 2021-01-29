@@ -1,5 +1,5 @@
 DELETE FROM
-	reimbursementitems
+	items
 WHERE
 	_itemId = ?
 	AND

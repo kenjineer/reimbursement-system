@@ -1,5 +1,6 @@
 export class Reimbursement {
   _reimbursementId: number;
+  employeeName: string;
   _categoryId: number;
   categoryName: string;
   purpose: string;

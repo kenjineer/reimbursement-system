@@ -41,6 +41,7 @@ export class ReimbursementsComponent implements AfterContentInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
     '_reimbursementId',
+    'employeeName',
     'categoryName',
     'purpose',
     'totalCost',

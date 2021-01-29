@@ -7,6 +7,7 @@ import { Observable, of as observableOf, merge } from 'rxjs';
 // TODO: Replace this with your own data model type
 export interface ReimbursementsItem {
   _reimbursementId: number;
+  employeeName: string;
   _categoryId: number;
   categoryName: string;
   purpose: string;
@@ -85,6 +86,8 @@ export class ReimbursementsDataSource extends DataSource<ReimbursementsItem> {
       switch (this.sort.active) {
         case '_reimbursementId':
           return compare(+a._reimbursementId, +b._reimbursementId, isAsc);
+        case 'employeeName':
+          return compare(+a.employeeName, +b.employeeName, isAsc);
         case '_categoryId':
           return compare(a._categoryId, b._categoryId, isAsc);
         case 'categoryName':

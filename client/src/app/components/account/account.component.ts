@@ -118,29 +118,40 @@ export class AccountComponent implements OnInit {
 
   onSubmit() {
     if (this.accountForm.valid) {
-      const account = this.accountForm.getRawValue() as User;
-      const updateAccount = {
-        nickname: account.nickname,
-        username: account.username,
-        password: account.password,
-      };
-      this.accountService.putUserAccount(updateAccount).subscribe(
-        (res) => {
-          this.accountForm?.controls['password'].setValue('');
-          this.accountForm?.controls['confirmPassword'].setValue('');
-          this.reusableDialogComponent.openSuccessDialog(
-            'User account successfully updated.',
-            this.reusableDialog
-          );
-          this.ngOnInit();
-        },
-        (err) => {
-          console.log(err);
-          this.reusableDialogComponent.openErrorDialog(
-            err.error?.error_message ?? err.statusText,
-            this.reusableDialog
+      ReusableDialogComponent.componentFlag = 'Update Account';
+      const updateDialogRef = this.reusableDialog.open(ReusableDialogComponent);
+      updateDialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          const account = this.accountForm.getRawValue() as User;
+          const updateAccount = {
+            nickname: account.nickname,
+            username: account.username,
+            password: account.password,
+          };
+          this.accountService.putUserAccount(updateAccount).subscribe(
+            (res) => {
+              this.accountForm?.controls['password'].setValue('');
+              this.accountForm?.controls['confirmPassword'].setValue('');
+              this.reusableDialogComponent.openSuccessDialog(
+                'User account successfully updated.',
+                this.reusableDialog
+              );
+              this.ngOnInit();
+            },
+            (err) => {
+              console.log(err);
+              this.reusableDialogComponent.openErrorDialog(
+                err.error?.error_message ?? err.statusText,
+                this.reusableDialog
+              );
+            }
           );
         }
+      });
+    } else {
+      this.reusableDialogComponent.openErrorDialog(
+        'There seems to be a problem with your input fields. Please provide the necessary information.',
+        this.reusableDialog
       );
     }
   }

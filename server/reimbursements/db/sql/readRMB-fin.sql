@@ -1,5 +1,6 @@
 SELECT
 	RMB._reimbursementId,
+	TRIM(CONCAT_WS(" ", USR.firstname, USR.middlename, USR.lastname, USR.suffix)) AS employeeName,
 	CTG._categoryId,
 	CTG.categoryName,
 	RMB.purpose,
@@ -15,6 +16,8 @@ FROM
 	reimbursements AS RMB
 	INNER JOIN categories AS CTG
 	ON RMB._categoryId = CTG._categoryId
+	INNER JOIN users AS USR
+	ON RMB._userId = USR._userId
 WHERE
 	RMB.status = 2
 	OR
