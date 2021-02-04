@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const util = require('util');
 const User = require('../models/user.model');
@@ -59,7 +58,7 @@ exports.postApprovalEmail = async (req, res) => {
 		await transporter.sendMail(mailOptions);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send({ error_message: 'Cannot connect to database / System Error' });
@@ -109,7 +108,7 @@ exports.postRejectionEmail = async (req, res) => {
 		await transporter.sendMail(mailOptions);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send({ error_message: 'Cannot send mail / System Error' });
@@ -157,7 +156,7 @@ exports.postReleaseEmail = async (req, res) => {
 		await transporter.sendMail(mailOptions);
 
 		// Return acknowledgement response
-		return res.sendStatus(200);
+		return res.status(200).send();
 	} catch (err) /* istanbul ignore next */ {
 		console.log(err);
 		return res.status(503).send({ error_message: 'Cannot send mail / System Error' });

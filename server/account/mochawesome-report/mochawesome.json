@@ -1,0 +1,291 @@
+{
+  "stats": {
+    "suites": 3,
+    "tests": 7,
+    "passes": 7,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-02-01T11:21:48.059Z",
+    "end": "2021-02-01T11:21:48.790Z",
+    "duration": 731,
+    "testsRegistered": 7,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "5ec5af96-9204-41db-bab2-9b6f65c0bbda",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "243756b6-516a-4e01-9147-fbfb84d148df",
+          "title": "Account API",
+          "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\account\\test\\accountTest.js",
+          "file": "\\test\\accountTest.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "e0fb33b0-30e8-4f4a-8af2-ecd931b4b47b",
+              "title": "Authorized User",
+              "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\account\\test\\accountTest.js",
+              "file": "\\test\\accountTest.js",
+              "beforeHooks": [
+                {
+                  "title": "\"before all\" hook in \"Authorized User\"",
+                  "fullTitle": "Account API Authorized User \"before all\" hook in \"Authorized User\"",
+                  "timedOut": false,
+                  "duration": 111,
+                  "state": null,
+                  "speed": null,
+                  "pass": false,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const credentials = {\n\tusername: '0902191173',\n\tpassword: 'kenken',\n};\nchai.request(loginServerUrl)\n\t.post('/api/v1/login')\n\t.send(credentials)\n\t.end((err, res) => {\n\t\tif (err) {\n\t\t\tconsole.log(err);\n\t\t} else {\n\t\t\tjwt = res.body.jwt.token;\n\t\t}\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "891cfd9d-c2df-42c0-b27e-5c5bf2005a68",
+                  "parentUUID": "e0fb33b0-30e8-4f4a-8af2-ecd931b4b47b",
+                  "isHook": true,
+                  "skipped": false
+                }
+              ],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "It should GET user account info when user is authorized.",
+                  "fullTitle": "Account API Authorized User It should GET user account info when user is authorized.",
+                  "timedOut": false,
+                  "duration": 53,
+                  "state": "passed",
+                  "speed": "medium",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const account = {\n\taccount: {\n\t\t_userId: '0902191173',\n\t\tdevName: 'Development B',\n\t\tofficeCode: 'MKT 3F',\n\t\tpositionName: 'Assistant Research and Development Engineer',\n\t\tnickname: 'Ken',\n\t\tfirstname: 'Kenneth',\n\t\tmiddlename: 'Caro',\n\t\tlastname: 'Karamihan',\n\t\tsuffix: null,\n\t\tusername: 'kenken',\n\t\temail: 'kenneth.karamihan@awsys-i.com',\n\t\tgender: 0,\n\t},\n};\nchai.request(accountServer)\n\t.get('/api/v1/account')\n\t.set('Authorization', jwt)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tres.body.should.be.eql(account);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "b10aa62f-08c4-4d81-a926-1f0a3465de1f",
+                  "parentUUID": "e0fb33b0-30e8-4f4a-8af2-ecd931b4b47b",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should PUT user account info with new password when user is authorized.",
+                  "fullTitle": "Account API Authorized User It should PUT user account info with new password when user is authorized.",
+                  "timedOut": false,
+                  "duration": 188,
+                  "state": "passed",
+                  "speed": "slow",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const account = {\n\tnickname: 'Kenny',\n\tusername: 'kenny',\n\tpassword: 'kennykenny',\n};\nchai.request(accountServer)\n\t.put('/api/v1/account')\n\t.set('Authorization', jwt)\n\t.send(account)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "79bdfda1-8ff3-4432-bffb-751175870e54",
+                  "parentUUID": "e0fb33b0-30e8-4f4a-8af2-ecd931b4b47b",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should PUT user account info without password when user is authorized.",
+                  "fullTitle": "Account API Authorized User It should PUT user account info without password when user is authorized.",
+                  "timedOut": false,
+                  "duration": 7,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const account = {\n\tnickname: 'Kenny',\n\tusername: 'kenny',\n\tpassword: '',\n};\nchai.request(accountServer)\n\t.put('/api/v1/account')\n\t.set('Authorization', jwt)\n\t.send(account)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "429ac526-13cd-446b-9112-d03847b1b0af",
+                  "parentUUID": "e0fb33b0-30e8-4f4a-8af2-ecd931b4b47b",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "b10aa62f-08c4-4d81-a926-1f0a3465de1f",
+                "79bdfda1-8ff3-4432-bffb-751175870e54",
+                "429ac526-13cd-446b-9112-d03847b1b0af"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 248,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "d53a7833-cd2b-406c-bba6-9a17e707bb2a",
+              "title": "Unauthorized User",
+              "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\account\\test\\accountTest.js",
+              "file": "\\test\\accountTest.js",
+              "beforeHooks": [
+                {
+                  "title": "\"before each\" hook in \"Unauthorized User\"",
+                  "fullTitle": "Account API Unauthorized User \"before each\" hook in \"Unauthorized User\"",
+                  "timedOut": false,
+                  "duration": 80,
+                  "state": null,
+                  "speed": null,
+                  "pass": false,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const credentials = {\n\tusername: '0902191173',\n\tpassword: 'incorrect',\n};\nchai.request(loginServerUrl)\n\t.post('/api/v1/login')\n\t.send(credentials)\n\t.end((err, res) => {\n\t\tif (err) {\n\t\t\tconsole.log(err);\n\t\t} else {\n\t\t\tjwt = res.body.jwt.token;\n\t\t}\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "a4ff363f-bcc2-48ef-a9ff-a930a9949a02",
+                  "parentUUID": "d53a7833-cd2b-406c-bba6-9a17e707bb2a",
+                  "isHook": true,
+                  "skipped": false
+                }
+              ],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "It should NOT GET user account info when user is unauthorized.",
+                  "fullTitle": "Account API Unauthorized User It should NOT GET user account info when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 3,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "chai.request(accountServer)\n\t.get('/api/v1/account')\n\t.set('Authorization', jwt || '')\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "c32b9481-8622-4963-95c3-7fa8153bb308",
+                  "parentUUID": "d53a7833-cd2b-406c-bba6-9a17e707bb2a",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should NOT PUT user account info with new password when user is unauthorized.",
+                  "fullTitle": "Account API Unauthorized User It should NOT PUT user account info with new password when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 3,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const account = {\n\taccount: {\n\t\t_userId: '0902191173',\n\t\tdevName: 'Development B',\n\t\tofficeCode: 'MKT 3F',\n\t\tpositionName: 'Assistant Research and Development Engineer',\n\t\tnickname: 'Ken',\n\t\tfirstname: 'Kenneth',\n\t\tmiddlename: 'Caro',\n\t\tlastname: 'Karamihan',\n\t\tsuffix: null,\n\t\tusername: 'kenken',\n\t\temail: 'kenneth.karamihan@awsys-i.com',\n\t\tgender: 0,\n\t},\n};\nchai.request(accountServer)\n\t.put('/api/v1/account')\n\t.set('Authorization', jwt || '')\n\t.send(account)\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "f27a7476-9d2b-42b9-8bfa-577c508d6ecd",
+                  "parentUUID": "d53a7833-cd2b-406c-bba6-9a17e707bb2a",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should NOT PUT user account info with new password when user is unauthorized.",
+                  "fullTitle": "Account API Unauthorized User It should NOT PUT user account info with new password when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 3,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const account = {\n\tnickname: 'Kenny',\n\tusername: 'kenny',\n\tpassword: 'kennykenny',\n};\nchai.request(accountServer)\n\t.put('/api/v1/dashboard')\n\t.set('Authorization', jwt || '')\n\t.send(account)\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "4f117252-25ee-4f21-9016-61e3695c331a",
+                  "parentUUID": "d53a7833-cd2b-406c-bba6-9a17e707bb2a",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should NOT PUT user account info without password when user is unauthorized.",
+                  "fullTitle": "Account API Unauthorized User It should NOT PUT user account info without password when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 3,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const account = {\n\tnickname: 'Kenny',\n\tusername: 'kenny',\n\tpassword: '',\n};\nchai.request(accountServer)\n\t.put('/api/v1/dashboard')\n\t.set('Authorization', jwt || '')\n\t.send(account)\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "f9212e1a-951a-4b0a-89a4-369e44043d0f",
+                  "parentUUID": "d53a7833-cd2b-406c-bba6-9a17e707bb2a",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "c32b9481-8622-4963-95c3-7fa8153bb308",
+                "f27a7476-9d2b-42b9-8bfa-577c508d6ecd",
+                "4f117252-25ee-4f21-9016-61e3695c331a",
+                "f9212e1a-951a-4b0a-89a4-369e44043d0f"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 12,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "8.2.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "6.2.1"
+    },
+    "marge": {
+      "options": null,
+      "version": "5.1.0"
+    }
+  }
+}

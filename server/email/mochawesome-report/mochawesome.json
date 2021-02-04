@@ -1,0 +1,272 @@
+{
+  "stats": {
+    "suites": 3,
+    "tests": 6,
+    "passes": 6,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-02-04T09:34:51.488Z",
+    "end": "2021-02-04T09:34:59.081Z",
+    "duration": 7593,
+    "testsRegistered": 6,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "bacb55ee-295e-43f9-9d6a-0ad234309533",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "81a67db2-d17e-406b-af94-69e31c5d1ed5",
+          "title": "Email API",
+          "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\email\\test\\emailTest.js",
+          "file": "\\test\\emailTest.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "eebe99de-4db3-4167-acb0-2ef9a09c3a51",
+              "title": "Authorized User",
+              "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\email\\test\\emailTest.js",
+              "file": "\\test\\emailTest.js",
+              "beforeHooks": [
+                {
+                  "title": "\"before all\" hook in \"Authorized User\"",
+                  "fullTitle": "Email API Authorized User \"before all\" hook in \"Authorized User\"",
+                  "timedOut": false,
+                  "duration": 97,
+                  "state": null,
+                  "speed": null,
+                  "pass": false,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const credentials = {\n\tusername: '0902191173',\n\tpassword: 'kenken',\n};\nchai.request(loginServerUrl)\n\t.post('/api/v1/login')\n\t.send(credentials)\n\t.end((err, res) => {\n\t\tif (err) {\n\t\t\tconsole.log(err);\n\t\t} else {\n\t\t\tjwt = res.body.jwt.token;\n\t\t}\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "e1260dbc-00de-41a0-993a-be198436f851",
+                  "parentUUID": "eebe99de-4db3-4167-acb0-2ef9a09c3a51",
+                  "isHook": true,
+                  "skipped": false
+                }
+              ],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "It should POST reimbursement approval email when user is authorized.",
+                  "fullTitle": "Email API Authorized User It should POST reimbursement approval email when user is authorized.",
+                  "timedOut": false,
+                  "duration": 2436,
+                  "state": "passed",
+                  "speed": "slow",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const aprReimbursement = [\n\t[\n\t\t{\n\t\t\t_employeeId: '0902191173',\n\t\t\tcategoryName: 'Travel',\n\t\t\tpurpose: 'Sample Purpose 1',\n\t\t\ttotalCost: '1000.00',\n\t\t\tplannedDate: new Date('2021-04-26 04:00:00').toISOString(),\n\t\t\tstatus: 2,\n\t\t\tapprovalDate: new Date('2021-02-04 04:00:00').toISOString(),\n\t\t\trejectionDate: null,\n\t\t\tcreatedDate: new Date('2021-02-03 04:00:00').toISOString(),\n\t\t},\n\t],\n];\nsinon.stub(Reimbursement, 'readReimbursementsMgr').resolves(aprReimbursement);\nconst _reimbursementId = 1;\nconst data = {\n\tremarks: 'Sample Remarks Approved',\n};\nchai.request(emailServer)\n\t.post(`/api/v1/email/approval/${_reimbursementId}`)\n\t.set('Authorization', jwt)\n\t.send(data)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "5082b59f-64c8-4a0d-ace0-f5afe53e0b83",
+                  "parentUUID": "eebe99de-4db3-4167-acb0-2ef9a09c3a51",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should POST reimbursement rejection email when user is authorized.",
+                  "fullTitle": "Email API Authorized User It should POST reimbursement rejection email when user is authorized.",
+                  "timedOut": false,
+                  "duration": 2377,
+                  "state": "passed",
+                  "speed": "slow",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const rjtReimbursement = [\n\t[\n\t\t{\n\t\t\t_employeeId: '0902191173',\n\t\t\tcategoryName: 'Utilities',\n\t\t\tpurpose: 'Sample Purpose 2',\n\t\t\ttotalCost: '2000.00',\n\t\t\tplannedDate: new Date('2021-04-26 04:00:00').toISOString(),\n\t\t\tstatus: 0,\n\t\t\tapprovalDate: null,\n\t\t\trejectionDate: new Date('2021-02-04 04:00:00').toISOString(),\n\t\t\tcreatedDate: new Date('2021-02-03 04:00:00').toISOString(),\n\t\t},\n\t],\n];\nsinon.restore();\nsinon.stub(Reimbursement, 'readReimbursementsMgr').resolves(rjtReimbursement);\nconst _reimbursementId = 1;\nconst data = {\n\tremarks: 'Sample Remarks Rejected',\n};\nchai.request(emailServer)\n\t.post(`/api/v1/email/rejection/${_reimbursementId}`)\n\t.set('Authorization', jwt)\n\t.send(data)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "797b21cf-7af9-4abd-bd1c-d8f238e9005e",
+                  "parentUUID": "eebe99de-4db3-4167-acb0-2ef9a09c3a51",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should POST reimbursement release email when user is authorized.",
+                  "fullTitle": "Email API Authorized User It should POST reimbursement release email when user is authorized.",
+                  "timedOut": false,
+                  "duration": 2393,
+                  "state": "passed",
+                  "speed": "slow",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const rlsReimbursement = [\n\t[\n\t\t{\n\t\t\t_employeeId: '0902191173',\n\t\t\tcategoryName: 'Travel',\n\t\t\tpurpose: 'Sample Purpose 3',\n\t\t\ttotalCost: '1500.00',\n\t\t\tplannedDate: new Date('2021-04-26 04:00:00').toISOString(),\n\t\t\tstatus: 3,\n\t\t\treleaseDate: new Date('2021-02-04 04:00:00').toISOString(),\n\t\t\tcreatedDate: new Date('2021-02-03 04:00:00').toISOString(),\n\t\t},\n\t],\n];\nsinon.restore();\nsinon.stub(Reimbursement, 'readReimbursementsFin').resolves(rlsReimbursement);\nconst _reimbursementId = 1;\nconst data = {\n\tremarks: 'Sample Remarks Released',\n};\nchai.request(emailServer)\n\t.post(`/api/v1/email/release/${_reimbursementId}`)\n\t.set('Authorization', jwt)\n\t.send(data)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tsinon.restore();\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "688fe761-dc66-4e04-b086-11e7b144b4e6",
+                  "parentUUID": "eebe99de-4db3-4167-acb0-2ef9a09c3a51",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "5082b59f-64c8-4a0d-ace0-f5afe53e0b83",
+                "797b21cf-7af9-4abd-bd1c-d8f238e9005e",
+                "688fe761-dc66-4e04-b086-11e7b144b4e6"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 7206,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "8a76f2bd-085a-499b-9334-69b1388476d3",
+              "title": "Unauthorized User",
+              "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\email\\test\\emailTest.js",
+              "file": "\\test\\emailTest.js",
+              "beforeHooks": [
+                {
+                  "title": "\"before each\" hook in \"Unauthorized User\"",
+                  "fullTitle": "Email API Unauthorized User \"before each\" hook in \"Unauthorized User\"",
+                  "timedOut": false,
+                  "duration": 82,
+                  "state": null,
+                  "speed": null,
+                  "pass": false,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const credentials = {\n\tusername: '0902191173',\n\tpassword: 'incorrect',\n};\nchai.request(loginServerUrl)\n\t.post('/api/v1/login')\n\t.send(credentials)\n\t.end((err, res) => {\n\t\tif (err) {\n\t\t\tconsole.log(err);\n\t\t} else {\n\t\t\tjwt = res.body.jwt.token;\n\t\t}\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "fd0387c2-c12d-459c-afb4-7baa4ca879e1",
+                  "parentUUID": "8a76f2bd-085a-499b-9334-69b1388476d3",
+                  "isHook": true,
+                  "skipped": false
+                }
+              ],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "It should NOT POST reimbursement approval email when user is unauthorized.",
+                  "fullTitle": "Email API Unauthorized User It should NOT POST reimbursement approval email when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 4,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const _reimbursementId = 1;\nconst data = {\n\tremarks: 'Sample Remarks Approved',\n};\nchai.request(emailServer)\n\t.post(`/api/v1/email/approval/${_reimbursementId}`)\n\t.set('Authorization', jwt || '')\n\t.send(data)\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "32b4c0cf-64e7-4c4e-8f07-b0b6dfd5a95b",
+                  "parentUUID": "8a76f2bd-085a-499b-9334-69b1388476d3",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should NOT POST reimbursement rejection email when user is unauthorized.",
+                  "fullTitle": "Email API Unauthorized User It should NOT POST reimbursement rejection email when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 4,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const _reimbursementId = 1;\nconst data = {\n\tremarks: 'Sample Remarks Rejected',\n};\nchai.request(emailServer)\n\t.post(`/api/v1/email/rejection/${_reimbursementId}`)\n\t.set('Authorization', jwt || '')\n\t.send(data)\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "9db8a43f-810b-4b20-895f-b55351ec1e7d",
+                  "parentUUID": "8a76f2bd-085a-499b-9334-69b1388476d3",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "It should NOT POST reimbursement release email when user is unauthorized.",
+                  "fullTitle": "Email API Unauthorized User It should NOT POST reimbursement release email when user is unauthorized.",
+                  "timedOut": false,
+                  "duration": 3,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const _reimbursementId = 1;\nconst data = {\n\tremarks: 'Sample Remarks Released',\n};\nchai.request(emailServer)\n\t.post(`/api/v1/email/release/${_reimbursementId}`)\n\t.set('Authorization', jwt || '')\n\t.send(data)\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
+                  "err": {},
+                  "uuid": "63a22ec1-422b-45f7-b8c3-8a4af47cbec5",
+                  "parentUUID": "8a76f2bd-085a-499b-9334-69b1388476d3",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "32b4c0cf-64e7-4c4e-8f07-b0b6dfd5a95b",
+                "9db8a43f-810b-4b20-895f-b55351ec1e7d",
+                "63a22ec1-422b-45f7-b8c3-8a4af47cbec5"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 11,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "8.2.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "6.2.1"
+    },
+    "marge": {
+      "options": null,
+      "version": "5.1.0"
+    }
+  }
+}

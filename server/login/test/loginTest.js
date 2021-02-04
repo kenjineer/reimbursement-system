@@ -18,7 +18,7 @@ describe('Login API', () => {
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
 
-					res.should.have.status(201);
+					res.should.have.status(200);
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
@@ -40,7 +40,7 @@ describe('Login API', () => {
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
 
-					res.should.have.status(201);
+					res.should.have.status(200);
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');
@@ -62,7 +62,7 @@ describe('Login API', () => {
 				.end((err, res) => {
 					const loginMsg = 'Logged in successfully.';
 
-					res.should.have.status(201);
+					res.should.have.status(200);
 					res.body.success.should.be.eql(1);
 					res.body.message.should.be.eql(loginMsg);
 					res.body.jwt.should.have.property('token');

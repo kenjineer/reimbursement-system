@@ -16,7 +16,7 @@ module.exports.postLogin = function (req, res, next) {
 				// Success login response
 				jsonRes.success = 1;
 				jsonRes.message = 'Logged in successfully.';
-				res.status(201).send(jsonRes);
+				res.status(200).send(jsonRes);
 			} else {
 				// User unauthorized
 				res.status(401).send(jsonRes);

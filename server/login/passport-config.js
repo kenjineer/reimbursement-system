@@ -45,7 +45,6 @@ exports.initialize = (passport, readUserById, readUserByUsername, readUserByEmai
 	};
 
 	passport.use('login', new LocalStrategy({ session: false }, authenticateUser));
-	passport.serializeUser((user, done) => done(null, user._userId));
 };
 
 const issueJwt = (user) => {

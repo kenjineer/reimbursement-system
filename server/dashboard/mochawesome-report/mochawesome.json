@@ -5,9 +5,9 @@
     "passes": 2,
     "pending": 0,
     "failures": 0,
-    "start": "2021-01-27T09:09:47.220Z",
-    "end": "2021-01-27T09:09:47.523Z",
-    "duration": 303,
+    "start": "2021-02-01T11:31:51.921Z",
+    "end": "2021-02-01T11:31:52.203Z",
+    "duration": 282,
     "testsRegistered": 2,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "cc5be3d5-1280-42a0-93ce-369d1c1b4779",
+      "uuid": "897f8ef4-7c52-4816-9d18-a17852c531ae",
       "title": "",
       "fullFile": "",
       "file": "",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "3d71f7f0-ecaf-47c0-8eed-f3663aa44b59",
+          "uuid": "7911e969-f3c6-48a2-a34d-73d060f7c1b6",
           "title": "Dashboard API",
           "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\dashboard\\test\\dashboardTest.js",
           "file": "\\test\\dashboardTest.js",
@@ -36,7 +36,7 @@
           "tests": [],
           "suites": [
             {
-              "uuid": "1cabf88f-0331-42bd-98c7-94a1539678a2",
+              "uuid": "59c9988b-0d86-41b1-b5cd-adc073db1ca5",
               "title": "Authorized User",
               "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\dashboard\\test\\dashboardTest.js",
               "file": "\\test\\dashboardTest.js",
@@ -45,7 +45,7 @@
                   "title": "\"before all\" hook in \"Authorized User\"",
                   "fullTitle": "Dashboard API Authorized User \"before all\" hook in \"Authorized User\"",
                   "timedOut": false,
-                  "duration": 109,
+                  "duration": 106,
                   "state": null,
                   "speed": null,
                   "pass": false,
@@ -54,8 +54,8 @@
                   "context": null,
                   "code": "const credentials = {\n\tusername: '0902191173',\n\tpassword: 'kenken',\n};\nchai.request(loginServerUrl)\n\t.post('/api/v1/login')\n\t.send(credentials)\n\t.end((err, res) => {\n\t\tif (err) {\n\t\t\tconsole.log(err);\n\t\t} else {\n\t\t\tjwt = res.body.jwt.token;\n\t\t}\n\t\tdone();\n\t});",
                   "err": {},
-                  "uuid": "848444d3-9a74-49df-8d64-1aad63f1976b",
-                  "parentUUID": "1cabf88f-0331-42bd-98c7-94a1539678a2",
+                  "uuid": "096a9a3a-468b-4034-9762-e617cc12ce9e",
+                  "parentUUID": "59c9988b-0d86-41b1-b5cd-adc073db1ca5",
                   "isHook": true,
                   "skipped": false
                 }
@@ -66,35 +66,35 @@
                   "title": "It should GET user reimbursements when user is authorized.",
                   "fullTitle": "Dashboard API Authorized User It should GET user reimbursements when user is authorized.",
                   "timedOut": false,
-                  "duration": 81,
+                  "duration": 67,
                   "state": "passed",
-                  "speed": "slow",
+                  "speed": "medium",
                   "pass": true,
                   "fail": false,
                   "pending": false,
                   "context": null,
                   "code": "chai.request(dashboardServer)\n\t.get('/api/v1/dashboard')\n\t.set('Authorization', jwt)\n\t.end((err, res) => {\n\t\tres.should.have.status(200);\n\t\tres.body.should.have.property('user').to.be.an('object');\n\t\tres.body.should.have.property('ctgReimbursements').to.be.an('array');\n\t\tres.body.should.have.property('pndReimbursements').to.be.an('array');\n\t\tres.body.should.have.property('rctReimbursements').to.be.an('array');\n\t\tres.body.should.have.property('rjtReimbursementCnt').to.be.a('number');\n\t\tdone();\n\t});",
                   "err": {},
-                  "uuid": "5df03a9f-2eca-4842-87e9-cf61542cbdb5",
-                  "parentUUID": "1cabf88f-0331-42bd-98c7-94a1539678a2",
+                  "uuid": "24f8eed0-ff81-4970-b5c6-209835e42acc",
+                  "parentUUID": "59c9988b-0d86-41b1-b5cd-adc073db1ca5",
                   "isHook": false,
                   "skipped": false
                 }
               ],
               "suites": [],
               "passes": [
-                "5df03a9f-2eca-4842-87e9-cf61542cbdb5"
+                "24f8eed0-ff81-4970-b5c6-209835e42acc"
               ],
               "failures": [],
               "pending": [],
               "skipped": [],
-              "duration": 81,
+              "duration": 67,
               "root": false,
               "rootEmpty": false,
               "_timeout": 2000
             },
             {
-              "uuid": "03ce20ff-bf02-426d-a9e0-ce4398e62fbf",
+              "uuid": "dc15f2c9-dd60-4ec3-9cb0-fe380a6841e9",
               "title": "Unauthorized User",
               "fullFile": "C:\\Users\\Ken\\Projects\\reimbursement-system\\reimbursement-system\\server\\dashboard\\test\\dashboardTest.js",
               "file": "\\test\\dashboardTest.js",
@@ -103,7 +103,7 @@
                   "title": "\"before each\" hook in \"Unauthorized User\"",
                   "fullTitle": "Dashboard API Unauthorized User \"before each\" hook in \"Unauthorized User\"",
                   "timedOut": false,
-                  "duration": 83,
+                  "duration": 82,
                   "state": null,
                   "speed": null,
                   "pass": false,
@@ -112,8 +112,8 @@
                   "context": null,
                   "code": "const credentials = {\n\tusername: '0902191173',\n\tpassword: 'incorrect',\n};\nchai.request(loginServerUrl)\n\t.post('/api/v1/login')\n\t.send(credentials)\n\t.end((err, res) => {\n\t\tif (err) {\n\t\t\tconsole.log(err);\n\t\t} else {\n\t\t\tjwt = res.body.jwt.token;\n\t\t}\n\t\tdone();\n\t});",
                   "err": {},
-                  "uuid": "5049be94-db12-4967-bcbb-5e2fdb3b1ca7",
-                  "parentUUID": "03ce20ff-bf02-426d-a9e0-ce4398e62fbf",
+                  "uuid": "c801aee2-ead4-44cc-9cb0-c41808278b12",
+                  "parentUUID": "dc15f2c9-dd60-4ec3-9cb0-fe380a6841e9",
                   "isHook": true,
                   "skipped": false
                 }
@@ -124,7 +124,7 @@
                   "title": "It should NOT GET user reimbursements when user is unauthorized.",
                   "fullTitle": "Dashboard API Unauthorized User It should NOT GET user reimbursements when user is unauthorized.",
                   "timedOut": false,
-                  "duration": 3,
+                  "duration": 4,
                   "state": "passed",
                   "speed": "fast",
                   "pass": true,
@@ -133,20 +133,20 @@
                   "context": null,
                   "code": "chai.request(dashboardServer)\n\t.get('/api/v1/dashboard')\n\t.set('Authorization', jwt || '')\n\t.end((err, res) => {\n\t\tres.should.have.status(401);\n\t\tdone();\n\t});",
                   "err": {},
-                  "uuid": "73bfca01-f7c2-4bec-9956-f1491026f26f",
-                  "parentUUID": "03ce20ff-bf02-426d-a9e0-ce4398e62fbf",
+                  "uuid": "3a49f17c-6d32-4470-9979-01526e9a31ef",
+                  "parentUUID": "dc15f2c9-dd60-4ec3-9cb0-fe380a6841e9",
                   "isHook": false,
                   "skipped": false
                 }
               ],
               "suites": [],
               "passes": [
-                "73bfca01-f7c2-4bec-9956-f1491026f26f"
+                "3a49f17c-6d32-4470-9979-01526e9a31ef"
               ],
               "failures": [],
               "pending": [],
               "skipped": [],
-              "duration": 3,
+              "duration": 4,
               "root": false,
               "rootEmpty": false,
               "_timeout": 2000

@@ -26,7 +26,7 @@ exports.getUserReimbursements = async (req, res) => {
 		if (req.params.authority === '0') {
 			// Accessing Reimbursements as Regular Employee
 			[reimbursements] = await Reimbursement.readReimbursementsEmp(user._userId);
-		} else if (req.params.authority === '1' && req.params.authority >= user.authority) {
+		} else if (req.params.authority === '1' && req.params.authority <= user.authority) {
 			// Accessing Reimbursements as Manager
 			[reimbursements] = await Reimbursement.readReimbursementsMgr(user._userId);
 		} else if (req.params.authority === '2' && req.params.authority == user.authority) {
@@ -355,7 +355,7 @@ exports.deleteReimbursement = async (req, res) => {
 	}
 };
 
-// ROUTE /api/reimbursements/:_reimbursementId/items/_itemId
+// ROUTE /api/v1/reimbursements/:_reimbursementId/items/:_itemId
 // Delete user reimbursement item.
 exports.deleteItem = async (req, res) => {
 	try {
@@ -370,7 +370,7 @@ exports.deleteItem = async (req, res) => {
 	}
 };
 
-// ROUTE /api/reimbursements/:_reimbursementId/receipts/_receiptId
+// ROUTE /api/v1/reimbursements/:_reimbursementId/receipts/:_receiptId
 // Delete user reimbursement receipt.
 exports.deleteReceipt = async (req, res) => {
 	try {

@@ -1,3 +1,3 @@
 FROM mysql:8.0
 
-ADD Dump20210129.sql /docker-entrypoint-initdb.d
+ADD Dump20210201.sql /docker-entrypoint-initdb.d
